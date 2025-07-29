@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/job.dart';
 import '../providers/jobs_provider.dart';
 
@@ -29,7 +30,94 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
     super.dispose();
   }
   
+  Future<bool> _requestCameraPermission() async {
+    var status = await Permission.camera.status;
+    
+    if (status.isGranted) {
+      return true;
+    }
+    
+    // Request permission
+    status = await Permission.camera.request();
+    if (status.isPermanentlyDenied) {
+      // Show dialog to open app settings
+      _showPermissionDialog('Camera');
+      return false;
+    }
+    
+    return status.isGranted;
+  }
+  
+  Future<bool> _requestPhotosPermission() async {
+    // For Android 13+, check for photos permission
+    if (Platform.isAndroid) {
+      var status = await Permission.photos.status;
+      
+      if (status.isGranted) {
+        return true;
+      }
+      
+      // Request permission
+      status = await Permission.photos.request();
+      if (status.isPermanentlyDenied) {
+        _showPermissionDialog('Photos');
+        return false;
+      }
+      
+      return status.isGranted;
+    }
+    
+    // For iOS, check photo library permission
+    if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      
+      if (status.isGranted) {
+        return true;
+      }
+      
+      status = await Permission.photos.request();
+      if (status.isPermanentlyDenied) {
+        _showPermissionDialog('Photos');
+        return false;
+      }
+      
+      return status.isGranted;
+    }
+    
+    return true; // Default for other platforms
+  }
+  
+  void _showPermissionDialog(String permissionType) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('$permissionType Permission Required'),
+        content: Text(
+          'To use this feature, you need to enable $permissionType permission in app settings.'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+  
   Future<void> _takePhoto() async {
+    final hasPermission = await _requestCameraPermission();
+    if (!hasPermission) {
+      return;
+    }
+    
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? photo = await picker.pickImage(
@@ -40,6 +128,7 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
       );
       
       if (photo != null) {
+        if (!mounted) return;
         setState(() {
           _selectedImagePath = photo.path;
         });
@@ -51,9 +140,11 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
         );
       }
     } catch (e) {
+      debugPrint('Error capturing photo: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error capturing photo: $e'),
+          content: Text('Error capturing photo: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -61,6 +152,11 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
   }
   
   Future<void> _pickPhoto() async {
+    final hasPermission = await _requestPhotosPermission();
+    if (!hasPermission) {
+      return;
+    }
+    
     final ImagePicker picker = ImagePicker();
     try {
       final XFile? image = await picker.pickImage(
@@ -71,6 +167,7 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
       );
       
       if (image != null) {
+        if (!mounted) return;
         setState(() {
           _selectedImagePath = image.path;
         });
@@ -82,9 +179,11 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
         );
       }
     } catch (e) {
+      debugPrint('Error selecting photo: $e');
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error selecting photo: $e'),
+          content: Text('Error selecting photo: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -103,8 +202,24 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
       return;
     }
     
+    // Check if selected image path is valid before proceeding
+    String? photoPath = _selectedImagePath;
+    if (photoPath != null) {
+      final file = File(photoPath);
+      if (!file.existsSync()) {
+        // If file doesn't exist, don't use it
+        photoPath = null;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Photo file not accessible. Saving note without photo.'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    }
+    
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-    jobsProvider.addJobNote(widget.job.id, note, _selectedImagePath);
+    jobsProvider.addJobNote(widget.job.id, note, photoPath);
     
     // Clear the inputs
     _noteController.clear();
@@ -203,13 +318,7 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      File(_selectedImagePath!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  child: _buildImagePreview(_selectedImagePath!),
                 ),
                 InkWell(
                   onTap: () {
@@ -258,6 +367,38 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
     );
   }
   
+  Widget _buildImagePreview(String imagePath) {
+    final file = File(imagePath);
+    
+    try {
+      // Check if file exists and is accessible
+      if (file.existsSync()) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.file(
+            file,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Handle image loading errors
+              return const Center(
+                child: Icon(Icons.broken_image, color: Colors.grey),
+              );
+            },
+          ),
+        );
+      } else {
+        return const Center(
+          child: Icon(Icons.image_not_supported, color: Colors.grey),
+        );
+      }
+    } catch (e) {
+      // Handle any errors during file checking
+      return const Center(
+        child: Icon(Icons.error_outline, color: Colors.red),
+      );
+    }
+  }
+  
   Widget _buildNotesList() {
     if (widget.job.notes.isEmpty) {
       return const Center(
@@ -304,13 +445,7 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      File(note.photoPath!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  child: _buildImagePreview(note.photoPath!),
                 ),
               ),
             const Divider(),

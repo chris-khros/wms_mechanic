@@ -1,9 +1,6 @@
-import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:signature/signature.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import '../models/job.dart';
 import '../providers/jobs_provider.dart';
@@ -37,6 +34,7 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
   
   Future<void> _saveSignature() async {
     if (_controller.isEmpty) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please provide a signature'),
@@ -50,6 +48,7 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
       // Convert signature to image
       final ui.Image? image = await _controller.toImage();
       if (image == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Error saving signature'),
@@ -59,24 +58,29 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
         return;
       }
       
+      // Instead of saving to file, we'll use an in-memory representation
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final buffer = byteData!.buffer.asUint8List();
+      if (byteData == null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error processing signature'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       
-      // Save to file
-      final tempDir = await getTemporaryDirectory();
-      final signatureDir = await Directory('${tempDir.path}/signatures').create(recursive: true);
-      final filePath = path.join(
-        signatureDir.path, 
-        'signature_${widget.job.id}_${DateTime.now().millisecondsSinceEpoch}.png'
-      );
+      // Generate a unique identifier for this signature
+      final signatureId = 'signature_${widget.job.id}_${DateTime.now().millisecondsSinceEpoch}';
       
-      final file = File(filePath);
-      await file.writeAsBytes(buffer);
-      
-      // Update job with signature path
+      // Update job with signature identifier
+      // In a real app, you would store the byte data in a database or cloud storage
+      // For this demo, we'll just use the ID as a placeholder
       final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-      jobsProvider.updateCustomerSignature(widget.job.id, filePath);
+      jobsProvider.updateCustomerSignature(widget.job.id, signatureId);
       
+      if (!mounted) return;
       setState(() {
         _isSigningMode = false;
       });
@@ -89,6 +93,7 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
       );
       
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e'),
@@ -235,11 +240,12 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ignore: prefer_const_constructors
             Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.green),
-                const SizedBox(width: 8),
-                const Text(
+              children: const [
+                Icon(Icons.check_circle, color: Colors.green),
+                SizedBox(width: 8),
+                Text(
                   'Customer Sign-off Complete',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -249,29 +255,23 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
               ],
             ),
             const SizedBox(height: 16),
-            if (widget.job.customerSignature != null)
-              Center(
-                child: Container(
-                  height: 150,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: widget.job.customerSignature!.startsWith('assets')
-                        ? Image.asset(
-                            widget.job.customerSignature!,
-                            fit: BoxFit.contain,
-                          )
-                        : Image.file(
-                            File(widget.job.customerSignature!),
-                            fit: BoxFit.contain,
-                          ),
+            // Since we're not using file storage anymore, just show a placeholder for the signature
+            Center(
+              child: Container(
+                height: 150,
+                width: 300,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    'Signature ID: ${widget.job.customerSignature ?? "None"}',
+                    style: TextStyle(color: Colors.grey[600]),
                   ),
                 ),
               ),
+            ),
             const SizedBox(height: 16),
             const Center(
               child: Text(

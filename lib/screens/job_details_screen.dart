@@ -189,18 +189,6 @@ class JobDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTasksList(Job job) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: job.tasks.map((task) => _buildTaskItem(task)).toList(),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTaskItem(JobTask task) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

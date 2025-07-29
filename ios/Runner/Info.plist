@@ -25,9 +25,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires camera access to take photos of vehicle damage and repairs</string>
+	<string>We need camera access to take photos of vehicle issues and repairs to include in job notes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires photo library access to attach photos to job notes</string>
+	<string>We need access to your photo library to attach existing photos to job notes</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save photos to your library</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
