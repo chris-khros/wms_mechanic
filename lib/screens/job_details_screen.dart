@@ -189,27 +189,7 @@ class JobDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTaskItem(JobTask task) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            task.name,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(task.description),
-          const Divider(),
-        ],
-      ),
-    );
-  }
-  
+
   Widget _buildTasksListWithTimers(BuildContext context, Job job) {
     return Card(
       child: Padding(

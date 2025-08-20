@@ -191,8 +191,8 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
   }
   
   void _addNote() {
-    final note = _noteController.text.trim();
-    if (note.isEmpty) {
+    final noteText = _noteController.text.trim();
+    if (noteText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please enter a note'),
@@ -218,8 +218,15 @@ class _JobNotesWidgetState extends State<JobNotesWidget> {
       }
     }
     
+    final note = JobNote(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      content: noteText,
+      createdAt: DateTime.now(),
+      photoPath: photoPath,
+    );
+    
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-    jobsProvider.addJobNote(widget.job.id, note, photoPath);
+    jobsProvider.addJobNote(widget.job.id, note);
     
     // Clear the inputs
     _noteController.clear();
