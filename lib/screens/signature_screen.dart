@@ -370,15 +370,15 @@ class _SignatureScreenState extends State<SignatureScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: const Color(0xFF8360c3).withOpacity(0.2)),
               ),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: const Color(0xFF8360c3),
+                    color: Color(0xFF8360c3),
                     size: 24,
                   ),
-                  const SizedBox(width: 12),
-                  const Expanded(
+                  SizedBox(width: 12),
+                  Expanded(
                     child: Text(
                       'By signing below, the customer acknowledges that the work has been completed to their satisfaction and agrees to the charges.',
                       style: TextStyle(

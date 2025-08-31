@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:provider/provider.dart';
 import 'providers/jobs_provider.dart';
 import 'providers/profile_provider.dart';
@@ -14,7 +19,17 @@ import 'screens/notes_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/edit_profile_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize SQLite for desktop using FFI
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+  // Initialize SQLite for Web using FFI worker
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  }
   runApp(const MyApp());
 }
 
