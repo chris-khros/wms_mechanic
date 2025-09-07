@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+ 
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -68,24 +69,70 @@ class _LoginScreenState extends State<LoginScreen>
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     
-    final success = await authProvider.login(
-      _emailController.text.trim(),
-      _passwordController.text,
-    );
+    try {
+      final success = await authProvider.login(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
 
-    if (success) {
-      if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/dashboard');
+      if (success) {
+        if (mounted) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Login successful! Welcome back.'),
+              backgroundColor: Colors.green[600],
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+          
+          // Navigate to dashboard after a brief delay
+          await Future.delayed(const Duration(milliseconds: 500));
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed('/dashboard');
+          }
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Invalid email or password. Please try again.'),
+              backgroundColor: Colors.red[600],
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              action: SnackBarAction(
+                label: 'Dismiss',
+                textColor: Colors.white,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ),
+          );
+        }
       }
-    } else {
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Invalid email or password'),
+            content: Text('Login failed: ${e.toString()}'),
             backgroundColor: Colors.red[600],
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
+            ),
+            action: SnackBarAction(
+              label: 'Dismiss',
+              textColor: Colors.white,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
             ),
           ),
         );
@@ -115,20 +162,24 @@ class _LoginScreenState extends State<LoginScreen>
               child: Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Logo and Title
-                      _buildHeader(),
-                      const SizedBox(height: 48),
-                      
-                      // Login Form
-                      _buildLoginForm(),
-                      const SizedBox(height: 32),
-                      
-                      // Demo Credentials Info
-                      _buildDemoInfo(),
-                    ],
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo and Title
+                        _buildHeader(),
+                        const SizedBox(height: 48),
+                        
+                        // Login Form
+                        _buildLoginForm(),
+                        const SizedBox(height: 32),
+                        
+                        // Demo Credentials Info
+                        _buildDemoInfo(),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -486,4 +537,5 @@ class _LoginScreenState extends State<LoginScreen>
       },
     );
   }
+
 }

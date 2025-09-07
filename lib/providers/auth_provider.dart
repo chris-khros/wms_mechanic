@@ -23,6 +23,10 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      // Ensure database is initialized and verified
+      await _dbHelper.database;
+      await _dbHelper.verifyDatabaseIntegrity();
+      
       final prefs = await SharedPreferences.getInstance();
       final mechanicId = prefs.getString('mechanic_id');
       
@@ -31,10 +35,14 @@ class AuthProvider with ChangeNotifier {
         if (mechanic != null) {
           _currentMechanic = mechanic;
           _isAuthenticated = true;
+          debugPrint('Auto-login successful for: ${mechanic['name']}');
         } else {
           // Clear invalid stored ID
           await prefs.remove('mechanic_id');
+          debugPrint('Invalid stored mechanic ID, cleared');
         }
+      } else {
+        debugPrint('No stored mechanic ID found');
       }
     } catch (e) {
       debugPrint('Error checking auth status: $e');
@@ -49,6 +57,10 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      // Ensure database is initialized and verified
+      await _dbHelper.database;
+      await _dbHelper.verifyDatabaseIntegrity();
+      
       final mechanic = await _dbHelper.authenticateMechanic(email, password);
       
       if (mechanic != null) {
@@ -59,10 +71,12 @@ class AuthProvider with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('mechanic_id', mechanic['id']);
         
+        debugPrint('Login successful for: ${mechanic['name']}');
         _isLoading = false;
         notifyListeners();
         return true;
       } else {
+        debugPrint('Login failed: Invalid credentials for $email');
         _isLoading = false;
         notifyListeners();
         return false;

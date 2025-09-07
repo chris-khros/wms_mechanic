@@ -15,7 +15,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class DashboardScreenState extends State<DashboardScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -187,39 +187,85 @@ class DashboardScreenState extends State<DashboardScreen>
     return Consumer<JobsProvider>(
       builder: (context, jobsProvider, child) {
         final todaysJobs = jobsProvider.todaysJobs;
-        final weeksJobs = jobsProvider.thisWeeksJobs;
         final completedToday = todaysJobs.where((job) => job.status == JobStatus.completed).length;
         final inProgressToday = todaysJobs.where((job) => job.status == JobStatus.inProgress).length;
 
-        return Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                'Today\'s Jobs',
-                todaysJobs.length.toString(),
-                Icons.today,
-                const Color(0xFF11998e),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                'In Progress',
-                inProgressToday.toString(),
-                Icons.play_circle_outline,
-                const Color(0xFFffecd2),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                'Completed',
-                completedToday.toString(),
-                Icons.check_circle_outline,
-                const Color(0xFF38ef7d),
-              ),
-            ),
-          ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isNarrow = constraints.maxWidth < 360;
+            if (isNarrow) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          'Today\'s Jobs',
+                          todaysJobs.length.toString(),
+                          Icons.today,
+                          const Color(0xFF11998e),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildStatCard(
+                          'In Progress',
+                          inProgressToday.toString(),
+                          Icons.play_circle_outline,
+                          const Color(0xFFffecd2),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          'Completed',
+                          completedToday.toString(),
+                          Icons.check_circle_outline,
+                          const Color(0xFF38ef7d),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                ],
+              );
+            }
+            return Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Today\'s Jobs',
+                    todaysJobs.length.toString(),
+                    Icons.today,
+                    const Color(0xFF11998e),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    'In Progress',
+                    inProgressToday.toString(),
+                    Icons.play_circle_outline,
+                    const Color(0xFFffecd2),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    'Completed',
+                    completedToday.toString(),
+                    Icons.check_circle_outline,
+                    const Color(0xFF38ef7d),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

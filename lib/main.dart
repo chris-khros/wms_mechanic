@@ -59,6 +59,15 @@ class MyApp extends StatelessWidget {
             elevation: 2,
           ),
         ),
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          // Clamp text scale to avoid pixel overflow on very large accessibility sizes
+          final clampedTextScale = mediaQuery.textScaleFactor.clamp(0.8, 1.2);
+          return MediaQuery(
+            data: mediaQuery.copyWith(textScaleFactor: clampedTextScale),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         home: const AuthWrapper(),
         routes: {
           LoginScreen.routeName: (ctx) => const LoginScreen(),
@@ -90,8 +99,17 @@ class _AuthWrapperState extends State<AuthWrapper> {
     super.initState();
     // Check authentication status when app starts
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AuthProvider>(context, listen: false).checkAuthStatus();
+      _initializeApp();
     });
+  }
+
+  Future<void> _initializeApp() async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.checkAuthStatus();
+    } catch (e) {
+      debugPrint('Error initializing app: $e');
+    }
   }
 
   @override
@@ -99,10 +117,37 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         if (authProvider.isLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667eea)),
+          return Scaffold(
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF667eea),
+                    Color(0xFF764ba2),
+                  ],
+                ),
+              ),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 3,
+                    ),
+                    SizedBox(height: 24),
+                    Text(
+                      'Initializing WMS Mechanic...',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

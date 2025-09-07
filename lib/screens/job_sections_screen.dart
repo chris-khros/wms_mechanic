@@ -112,12 +112,16 @@ class _JobSectionsScreenState extends State<JobSectionsScreen>
                       offset: Offset(0, 20 * (1 - value)),
                       child: Opacity(
                         opacity: value,
-                        child: const Text(
-                          'Select a section to manage:',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF2D3748),
+                        child: const FittedBox(
+                          alignment: Alignment.centerLeft,
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Select a section to manage:',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2D3748),
+                            ),
                           ),
                         ),
                       ),
@@ -305,7 +309,7 @@ class _JobSectionsScreenState extends State<JobSectionsScreen>
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 1.1,
+        childAspectRatio: 1.0,
       ),
       itemCount: sections.length,
       itemBuilder: (context, index) {
@@ -369,27 +373,29 @@ class _JobSectionsScreenState extends State<JobSectionsScreen>
             onTap: onTap,
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
                       icon,
-                      size: 32,
+                      size: 28,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Text(
                     title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),

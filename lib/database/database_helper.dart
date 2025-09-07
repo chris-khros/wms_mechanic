@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/job.dart';
@@ -23,10 +24,15 @@ class DatabaseHelper {
       path,
       version: 1,
       onCreate: _onCreate,
+      onOpen: (db) {
+        debugPrint('Database opened successfully');
+      },
     );
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    debugPrint('Creating database tables...');
+    
     // Create mechanics table
     await db.execute('''
       CREATE TABLE mechanics (
@@ -114,9 +120,12 @@ class DatabaseHelper {
     
     // Insert sample data
     await _insertSampleData(db);
+    
+    debugPrint('Database initialization completed successfully');
   }
 
   Future<void> _insertDefaultMechanic(Database db) async {
+    debugPrint('Inserting default mechanic...');
     await db.insert('mechanics', {
       'id': 'mech_001',
       'name': 'John Smith',
@@ -127,6 +136,7 @@ class DatabaseHelper {
       'experience_years': 8,
       'created_at': DateTime.now().toIso8601String(),
     });
+    debugPrint('Default mechanic inserted successfully');
   }
 
   Future<void> _insertSampleData(Database db) async {
@@ -255,6 +265,8 @@ class DatabaseHelper {
   // Mechanic operations
   Future<Map<String, dynamic>?> authenticateMechanic(String email, String password) async {
     final db = await database;
+    debugPrint('Attempting to authenticate mechanic with email: $email');
+    
     final result = await db.query(
       'mechanics',
       where: 'email = ? AND password = ?',
@@ -262,7 +274,21 @@ class DatabaseHelper {
     );
     
     if (result.isNotEmpty) {
+      debugPrint('Mechanic found: ${result.first['name']}');
       return result.first;
+    } else {
+      debugPrint('No mechanic found with email: $email');
+      // Let's also check if the email exists at all
+      final emailCheck = await db.query(
+        'mechanics',
+        where: 'email = ?',
+        whereArgs: [email],
+      );
+      if (emailCheck.isEmpty) {
+        debugPrint('Email $email does not exist in database');
+      } else {
+        debugPrint('Email exists but password is incorrect');
+      }
     }
     return null;
   }
@@ -477,6 +503,41 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [task.id],
     );
+  }
+
+  // Utility methods
+  Future<bool> verifyDatabaseIntegrity() async {
+    try {
+      final db = await database;
+      
+      // Check if mechanics table exists and has data
+      final mechanicsCount = await db.rawQuery('SELECT COUNT(*) as count FROM mechanics');
+      final count = mechanicsCount.first['count'] as int;
+      
+      debugPrint('Database verification: Found $count mechanics');
+      
+      if (count == 0) {
+        debugPrint('No mechanics found, reinitializing...');
+        await _insertDefaultMechanic(db);
+        return true;
+      }
+      
+      return count > 0;
+    } catch (e) {
+      debugPrint('Database verification failed: $e');
+      return false;
+    }
+  }
+
+  Future<void> resetDatabase() async {
+    try {
+      final db = await database;
+      await db.delete('mechanics');
+      await _insertDefaultMechanic(db);
+      debugPrint('Database reset completed');
+    } catch (e) {
+      debugPrint('Database reset failed: $e');
+    }
   }
 
   Future<void> close() async {
