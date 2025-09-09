@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/job.dart';
+import '../models/task.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -22,8 +23,9 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'wms_mechanic.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
       onOpen: (db) {
         debugPrint('Database opened successfully');
       },
@@ -115,6 +117,29 @@ class DatabaseHelper {
       )
     ''');
 
+    // Create tasks table
+    await db.execute('''
+      CREATE TABLE tasks (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        priority TEXT NOT NULL,
+        status TEXT NOT NULL,
+        category TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        due_date TEXT,
+        completed_at TEXT,
+        assigned_to TEXT,
+        job_id TEXT,
+        estimated_duration_minutes INTEGER DEFAULT 0,
+        actual_duration_minutes INTEGER DEFAULT 0,
+        tags TEXT,
+        notes TEXT,
+        location TEXT,
+        FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE SET NULL
+      )
+    ''');
+
     // Insert default mechanic
     await _insertDefaultMechanic(db);
     
@@ -122,6 +147,104 @@ class DatabaseHelper {
     await _insertSampleData(db);
     
     debugPrint('Database initialization completed successfully');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    debugPrint('Upgrading database from version $oldVersion to $newVersion');
+    
+    if (oldVersion < 2) {
+      // Add tasks table for version 2
+      await db.execute('''
+        CREATE TABLE tasks (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          description TEXT NOT NULL,
+          priority TEXT NOT NULL,
+          status TEXT NOT NULL,
+          category TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          due_date TEXT,
+          completed_at TEXT,
+          assigned_to TEXT,
+          job_id TEXT,
+          estimated_duration_minutes INTEGER DEFAULT 0,
+          actual_duration_minutes INTEGER DEFAULT 0,
+          tags TEXT,
+          notes TEXT,
+          location TEXT,
+          FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE SET NULL
+        )
+      ''');
+      
+      // Insert sample tasks
+      await _insertSampleTasks(db);
+      
+      debugPrint('Tasks table created and sample data inserted');
+    }
+  }
+
+  Future<void> _insertSampleTasks(Database db) async {
+    // Insert sample tasks
+    final sampleTasks = [
+      {
+        'id': 'task_001',
+        'title': 'Oil Change Service',
+        'description': 'Perform routine oil change for customer vehicle',
+        'priority': 'high',
+        'status': 'pending',
+        'category': 'maintenance',
+        'created_at': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(days: 1)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': 'JOB002',
+        'estimated_duration_minutes': 30,
+        'actual_duration_minutes': 0,
+        'tags': 'oil,maintenance,routine',
+        'notes': 'Customer requested synthetic oil',
+        'location': 'Bay 1',
+      },
+      {
+        'id': 'task_002',
+        'title': 'Engine Diagnostic Check',
+        'description': 'Run comprehensive diagnostic on engine issues',
+        'priority': 'urgent',
+        'status': 'inProgress',
+        'category': 'diagnostic',
+        'created_at': DateTime.now().subtract(const Duration(hours: 3)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(hours: 2)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': 'JOB001',
+        'estimated_duration_minutes': 60,
+        'actual_duration_minutes': 25,
+        'tags': 'engine,diagnostic,urgent',
+        'notes': 'Customer reported strange noises',
+        'location': 'Bay 2',
+      },
+      {
+        'id': 'task_003',
+        'title': 'Brake Pad Replacement',
+        'description': 'Replace worn brake pads on front wheels',
+        'priority': 'medium',
+        'status': 'completed',
+        'category': 'repair',
+        'created_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+        'due_date': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'completed_at': DateTime.now().subtract(const Duration(hours: 4)).toIso8601String(),
+        'assigned_to': 'mech_001',
+        'job_id': 'JOB002',
+        'estimated_duration_minutes': 45,
+        'actual_duration_minutes': 50,
+        'tags': 'brakes,repair,front',
+        'notes': 'Customer approved premium brake pads',
+        'location': 'Bay 1',
+      },
+    ];
+
+    for (var task in sampleTasks) {
+      await db.insert('tasks', task);
+    }
   }
 
   Future<void> _insertDefaultMechanic(Database db) async {
@@ -172,8 +295,8 @@ class DatabaseHelper {
       await db.insert('jobs', job);
     }
 
-    // Insert sample tasks
-    final tasks = [
+    // Insert sample job tasks
+    final jobTasks = [
       {
         'id': 'task_001',
         'job_id': 'JOB001',
@@ -212,7 +335,7 @@ class DatabaseHelper {
       },
     ];
 
-    for (var task in tasks) {
+    for (var task in jobTasks) {
       await db.insert('job_tasks', task);
     }
 
@@ -260,6 +383,9 @@ class DatabaseHelper {
     for (var record in serviceRecords) {
       await db.insert('service_records', record);
     }
+
+    // Insert sample tasks using the shared method
+    await _insertSampleTasks(db);
   }
 
   // Mechanic operations
@@ -533,11 +659,179 @@ class DatabaseHelper {
     try {
       final db = await database;
       await db.delete('mechanics');
+      await db.delete('jobs');
+      await db.delete('job_tasks');
+      await db.delete('job_parts');
+      await db.delete('service_records');
+      await db.delete('job_notes');
+      await db.delete('tasks');
       await _insertDefaultMechanic(db);
-      debugPrint('Database reset completed');
+      await _insertSampleData(db);
+      debugPrint('Database reset completed with sample tasks');
     } catch (e) {
       debugPrint('Database reset failed: $e');
     }
+  }
+
+  // Task operations
+  Future<void> insertTask(Task task) async {
+    final db = await database;
+    await db.insert('tasks', task.toMap());
+  }
+
+  Future<List<Task>> getAllTasks() async {
+    final db = await database;
+    final taskMaps = await db.query('tasks', orderBy: 'created_at DESC');
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<Task?> getTaskById(String id) async {
+    final db = await database;
+    final result = await db.query(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    
+    if (result.isNotEmpty) {
+      return Task.fromMap(result.first);
+    }
+    return null;
+  }
+
+  Future<List<Task>> getTasksByJobId(String jobId) async {
+    final db = await database;
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'job_id = ?',
+      whereArgs: [jobId],
+      orderBy: 'created_at DESC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<List<Task>> getTasksByStatus(TaskStatus status) async {
+    final db = await database;
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'status = ?',
+      whereArgs: [status.toString().split('.').last],
+      orderBy: 'created_at DESC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<List<Task>> getTasksByPriority(TaskPriority priority) async {
+    final db = await database;
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'priority = ?',
+      whereArgs: [priority.toString().split('.').last],
+      orderBy: 'created_at DESC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<List<Task>> getTasksByCategory(TaskCategory category) async {
+    final db = await database;
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'category = ?',
+      whereArgs: [category.toString().split('.').last],
+      orderBy: 'created_at DESC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<List<Task>> getOverdueTasks() async {
+    final db = await database;
+    final now = DateTime.now().toIso8601String();
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'due_date < ? AND status != ?',
+      whereArgs: [now, TaskStatus.completed.toString().split('.').last],
+      orderBy: 'due_date ASC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<List<Task>> getDueTodayTasks() async {
+    final db = await database;
+    final today = DateTime.now();
+    final startOfDay = DateTime(today.year, today.month, today.day).toIso8601String();
+    final endOfDay = DateTime(today.year, today.month, today.day, 23, 59, 59).toIso8601String();
+    
+    final taskMaps = await db.query(
+      'tasks',
+      where: 'due_date >= ? AND due_date <= ? AND status != ?',
+      whereArgs: [startOfDay, endOfDay, TaskStatus.completed.toString().split('.').last],
+      orderBy: 'due_date ASC',
+    );
+    
+    return taskMaps.map((map) => Task.fromMap(map)).toList();
+  }
+
+  Future<void> updateTaskRecord(Task task) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      task.toMap(),
+      where: 'id = ?',
+      whereArgs: [task.id],
+    );
+  }
+
+  Future<void> updateTaskStatus(String taskId, TaskStatus status) async {
+    final db = await database;
+    final updateData = {
+      'status': status.toString().split('.').last,
+    };
+    
+    if (status == TaskStatus.completed) {
+      updateData['completed_at'] = DateTime.now().toIso8601String();
+    }
+    
+    await db.update(
+      'tasks',
+      updateData,
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
+  }
+
+  Future<void> updateTaskPriority(String taskId, TaskPriority priority) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      {'priority': priority.toString().split('.').last},
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
+  }
+
+  Future<void> updateTaskDuration(String taskId, int actualDurationMinutes) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      {'actual_duration_minutes': actualDurationMinutes},
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    final db = await database;
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [taskId],
+    );
   }
 
   Future<void> close() async {

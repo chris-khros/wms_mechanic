@@ -77,20 +77,21 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
       // Update job with signature identifier
       // In a real app, you would store the byte data in a database or cloud storage
       // For this demo, we'll just use the ID as a placeholder
-      final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-      jobsProvider.updateCustomerSignature(widget.job.id, signatureId);
-      
-      if (!mounted) return;
-      setState(() {
-        _isSigningMode = false;
-      });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Signature saved successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      if (mounted) {
+        final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
+        jobsProvider.updateCustomerSignature(widget.job.id, signatureId);
+        
+        setState(() {
+          _isSigningMode = false;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Signature saved successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
       
     } catch (e) {
       if (!mounted) return;

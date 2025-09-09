@@ -1,0 +1,280 @@
+{
+  "@@locale": "en",
+  "appTitle": "WMS Mechanic",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "loginError": "Invalid email or password",
+  "@loginError": {
+    "description": "Login error message"
+  },
+  
+  "dashboard": "Dashboard",
+  "@dashboard": {
+    "description": "Dashboard screen title"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  "activeJobs": "Active Jobs",
+  "@activeJobs": {
+    "description": "Active jobs section title"
+  },
+  "completedJobs": "Completed Jobs",
+  "@completedJobs": {
+    "description": "Completed jobs section title"
+  },
+  "pendingJobs": "Pending Jobs",
+  "@pendingJobs": {
+    "description": "Pending jobs section title"
+  },
+  "allJobs": "All Jobs",
+  "@allJobs": {
+    "description": "All jobs section title"
+  },
+  
+  "taskManagement": "Task Management",
+  "@taskManagement": {
+    "description": "Task management section title"
+  },
+  "addTask": "Add Task",
+  "@addTask": {
+    "description": "Add task button text"
+  },
+  "tasks": "Tasks",
+  "@tasks": {
+    "description": "Tasks section title"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending status"
+  },
+  "inProgress": "In Progress",
+  "@inProgress": {
+    "description": "In progress status"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completed status"
+  },
+  "allTasks": "All Tasks",
+  "@allTasks": {
+    "description": "All tasks section title"
+  },
+  
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile screen title"
+  },
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Edit profile button text"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings section title"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "lightMode": "Light Mode",
+  "@lightMode": {
+    "description": "Light theme option"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark theme option"
+  },
+  "systemMode": "System",
+  "@systemMode": {
+    "description": "System theme option"
+  },
+  
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder text"
+  },
+  "searchTasks": "Search tasks...",
+  "@searchTasks": {
+    "description": "Search tasks placeholder"
+  },
+  "noResults": "No results found",
+  "@noResults": {
+    "description": "No search results message"
+  },
+  
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button text"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add button text"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  
+  "title": "Title",
+  "@title": {
+    "description": "Title field label"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description field label"
+  },
+  "priority": "Priority",
+  "@priority": {
+    "description": "Priority field label"
+  },
+  "status": "Status",
+  "@status": {
+    "description": "Status field label"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Category field label"
+  },
+  "dueDate": "Due Date",
+  "@dueDate": {
+    "description": "Due date field label"
+  },
+  "location": "Location",
+  "@location": {
+    "description": "Location field label"
+  },
+  "notes": "Notes",
+  "@notes": {
+    "description": "Notes field label"
+  },
+  
+  "low": "Low",
+  "@low": {
+    "description": "Low priority"
+  },
+  "medium": "Medium",
+  "@medium": {
+    "description": "Medium priority"
+  },
+  "high": "High",
+  "@high": {
+    "description": "High priority"
+  },
+  "urgent": "Urgent",
+  "@urgent": {
+    "description": "Urgent priority"
+  },
+  
+  "maintenance": "Maintenance",
+  "@maintenance": {
+    "description": "Maintenance category"
+  },
+  "repair": "Repair",
+  "@repair": {
+    "description": "Repair category"
+  },
+  "inspection": "Inspection",
+  "@inspection": {
+    "description": "Inspection category"
+  },
+  "diagnostic": "Diagnostic",
+  "@diagnostic": {
+    "description": "Diagnostic category"
+  },
+  "customerService": "Customer Service",
+  "@customerService": {
+    "description": "Customer service category"
+  },
+  "administrative": "Administrative",
+  "@administrative": {
+    "description": "Administrative category"
+  },
+  "other": "Other",
+  "@other": {
+    "description": "Other category"
+  },
+  
+  "noTasks": "No tasks found",
+  "@noTasks": {
+    "description": "No tasks message"
+  },
+  "noPendingTasks": "No pending tasks",
+  "@noPendingTasks": {
+    "description": "No pending tasks message"
+  },
+  "noInProgressTasks": "No tasks in progress",
+  "@noInProgressTasks": {
+    "description": "No in progress tasks message"
+  },
+  "noCompletedTasks": "No completed tasks",
+  "@noCompletedTasks": {
+    "description": "No completed tasks message"
+  },
+  "createFirstTask": "Create your first task to get started",
+  "@createFirstTask": {
+    "description": "Create first task message"
+  },
+  
+  "taskAdded": "Task added successfully",
+  "@taskAdded": {
+    "description": "Task added success message"
+  },
+  "taskUpdated": "Task updated successfully",
+  "@taskUpdated": {
+    "description": "Task updated success message"
+  },
+  "taskDeleted": "Task deleted successfully",
+  "@taskDeleted": {
+    "description": "Task deleted success message"
+  },
+  "errorOccurred": "An error occurred",
+  "@errorOccurred": {
+    "description": "Generic error message"
+  },
+  
+  "confirmDelete": "Are you sure you want to delete this item?",
+  "@confirmDelete": {
+    "description": "Delete confirmation message"
+  },
+  "confirmLogout": "Are you sure you want to logout?",
+  "@confirmLogout": {
+    "description": "Logout confirmation message"
+  }
+}

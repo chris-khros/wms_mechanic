@@ -48,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 );
                 
-                if (shouldLogout == true) {
+                if (shouldLogout == true && context.mounted) {
                   await Provider.of<AuthProvider>(context, listen: false).logout();
                   if (context.mounted) {
                     Navigator.of(context).pushNamedAndRemoveUntil(

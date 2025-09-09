@@ -1,0 +1,81 @@
+{
+  "@@locale": "ms",
+  "appTitle": "WMS Mekanik",
+  "login": "Log Masuk",
+  "logout": "Log Keluar",
+  "email": "E-mel",
+  "password": "Kata Laluan",
+  "loginError": "E-mel atau kata laluan tidak sah",
+  
+  "dashboard": "Papan Pemuka",
+  "welcome": "Selamat Datang",
+  "activeJobs": "Kerja Aktif",
+  "completedJobs": "Kerja Selesai",
+  "pendingJobs": "Kerja Menunggu",
+  "allJobs": "Semua Kerja",
+  
+  "taskManagement": "Pengurusan Tugas",
+  "addTask": "Tambah Tugas",
+  "tasks": "Tugas",
+  "pending": "Menunggu",
+  "inProgress": "Sedang Berjalan",
+  "completed": "Selesai",
+  "allTasks": "Semua Tugas",
+  
+  "profile": "Profil",
+  "editProfile": "Edit Profil",
+  "settings": "Tetapan",
+  
+  "language": "Bahasa",
+  "theme": "Tema",
+  "lightMode": "Mod Terang",
+  "darkMode": "Mod Gelap",
+  "systemMode": "Sistem",
+  
+  "search": "Cari",
+  "searchTasks": "Cari tugas...",
+  "noResults": "Tiada hasil dijumpai",
+  
+  "save": "Simpan",
+  "cancel": "Batal",
+  "delete": "Padam",
+  "edit": "Edit",
+  "add": "Tambah",
+  "close": "Tutup",
+  
+  "title": "Tajuk",
+  "description": "Penerangan",
+  "priority": "Keutamaan",
+  "status": "Status",
+  "category": "Kategori",
+  "dueDate": "Tarikh Akhir",
+  "location": "Lokasi",
+  "notes": "Nota",
+  
+  "low": "Rendah",
+  "medium": "Sederhana",
+  "high": "Tinggi",
+  "urgent": "Mendesak",
+  
+  "maintenance": "Penyelenggaraan",
+  "repair": "Pembaikan",
+  "inspection": "Pemeriksaan",
+  "diagnostic": "Diagnostik",
+  "customerService": "Perkhidmatan Pelanggan",
+  "administrative": "Pentadbiran",
+  "other": "Lain-lain",
+  
+  "noTasks": "Tiada tugas dijumpai",
+  "noPendingTasks": "Tiada tugas menunggu",
+  "noInProgressTasks": "Tiada tugas sedang berjalan",
+  "noCompletedTasks": "Tiada tugas selesai",
+  "createFirstTask": "Cipta tugas pertama anda untuk bermula",
+  
+  "taskAdded": "Tugas berjaya ditambah",
+  "taskUpdated": "Tugas berjaya dikemas kini",
+  "taskDeleted": "Tugas berjaya dipadam",
+  "errorOccurred": "Ralat telah berlaku",
+  
+  "confirmDelete": "Adakah anda pasti mahu memadam item ini?",
+  "confirmLogout": "Adakah anda pasti mahu log keluar?"
+}

@@ -1,0 +1,81 @@
+{
+  "@@locale": "zh",
+  "appTitle": "WMS 机械师",
+  "login": "登录",
+  "logout": "退出登录",
+  "email": "电子邮件",
+  "password": "密码",
+  "loginError": "电子邮件或密码无效",
+  
+  "dashboard": "仪表板",
+  "welcome": "欢迎",
+  "activeJobs": "活跃工作",
+  "completedJobs": "已完成工作",
+  "pendingJobs": "待处理工作",
+  "allJobs": "所有工作",
+  
+  "taskManagement": "任务管理",
+  "addTask": "添加任务",
+  "tasks": "任务",
+  "pending": "待处理",
+  "inProgress": "进行中",
+  "completed": "已完成",
+  "allTasks": "所有任务",
+  
+  "profile": "个人资料",
+  "editProfile": "编辑个人资料",
+  "settings": "设置",
+  
+  "language": "语言",
+  "theme": "主题",
+  "lightMode": "浅色模式",
+  "darkMode": "深色模式",
+  "systemMode": "系统",
+  
+  "search": "搜索",
+  "searchTasks": "搜索任务...",
+  "noResults": "未找到结果",
+  
+  "save": "保存",
+  "cancel": "取消",
+  "delete": "删除",
+  "edit": "编辑",
+  "add": "添加",
+  "close": "关闭",
+  
+  "title": "标题",
+  "description": "描述",
+  "priority": "优先级",
+  "status": "状态",
+  "category": "类别",
+  "dueDate": "截止日期",
+  "location": "位置",
+  "notes": "备注",
+  
+  "low": "低",
+  "medium": "中",
+  "high": "高",
+  "urgent": "紧急",
+  
+  "maintenance": "维护",
+  "repair": "维修",
+  "inspection": "检查",
+  "diagnostic": "诊断",
+  "customerService": "客户服务",
+  "administrative": "行政",
+  "other": "其他",
+  
+  "noTasks": "未找到任务",
+  "noPendingTasks": "没有待处理任务",
+  "noInProgressTasks": "没有进行中的任务",
+  "noCompletedTasks": "没有已完成的任务",
+  "createFirstTask": "创建您的第一个任务开始使用",
+  
+  "taskAdded": "任务添加成功",
+  "taskUpdated": "任务更新成功",
+  "taskDeleted": "任务删除成功",
+  "errorOccurred": "发生错误",
+  
+  "confirmDelete": "您确定要删除此项目吗？",
+  "confirmLogout": "您确定要退出登录吗？"
+}

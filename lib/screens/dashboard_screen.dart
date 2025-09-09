@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/jobs_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/theme_provider.dart';
+import '../providers/locale_provider.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/job_card.dart';
 import '../models/job.dart';
 import 'job_sections_screen.dart';
@@ -48,7 +51,7 @@ class DashboardScreenState extends State<DashboardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: NestedScrollView(
@@ -73,7 +76,7 @@ class DashboardScreenState extends State<DashboardScreen>
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return SliverAppBar(
-          expandedHeight: 280.0,
+          expandedHeight: 360.0,
           floating: false,
           pinned: true,
           elevation: 0,
@@ -122,22 +125,70 @@ class DashboardScreenState extends State<DashboardScreen>
                               ],
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(ProfileScreen.routeName);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
+                          Row(
+                            children: [
+                              Consumer<LocaleProvider>(
+                                builder: (context, localeProvider, child) {
+                                  return GestureDetector(
+                                    onTap: () => _showLanguageSelector(context, localeProvider),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Icon(
+                                        Icons.language,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                              child: const Icon(
-                                Icons.person,
-                                color: Colors.white,
-                                size: 24,
+                              const SizedBox(width: 12),
+                              Consumer<ThemeProvider>(
+                                builder: (context, themeProvider, child) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      themeProvider.toggleTheme();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Icon(
+                                        themeProvider.isDarkMode 
+                                            ? Icons.light_mode 
+                                            : Icons.dark_mode,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
+                              const SizedBox(width: 12),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -145,6 +196,10 @@ class DashboardScreenState extends State<DashboardScreen>
                       
                       // Stats Cards
                       _buildStatsCards(),
+                      const SizedBox(height: 20),
+                      
+                      // Quick Actions
+                      _buildQuickActions(),
                     ],
                   ),
                 ),
@@ -153,27 +208,27 @@ class DashboardScreenState extends State<DashboardScreen>
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(60),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
               ),
+            ),
               child: TabBar(
                 controller: _tabController,
-                labelColor: const Color(0xFF667eea),
-                unselectedLabelColor: Colors.grey[600],
-                indicatorColor: const Color(0xFF667eea),
+                labelColor: Theme.of(context).colorScheme.primary,
+                unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                indicatorColor: Theme.of(context).colorScheme.primary,
                 indicatorWeight: 3,
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
-                tabs: const [
-                  Tab(text: "Today's Jobs"),
-                  Tab(text: "This Week's Jobs"),
+                tabs: [
+                  Tab(text: AppLocalizations.of(context).activeJobs),
+                  Tab(text: AppLocalizations.of(context).completedJobs),
                 ],
               ),
             ),
@@ -371,13 +426,13 @@ class DashboardScreenState extends State<DashboardScreen>
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Theme.of(context).colorScheme.surface,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.work_off,
                       size: 64,
-                      color: Colors.grey[400],
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -385,7 +440,7 @@ class DashboardScreenState extends State<DashboardScreen>
                     emptyMessage,
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -394,7 +449,7 @@ class DashboardScreenState extends State<DashboardScreen>
                     'Take a break or check upcoming jobs',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[500],
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                     ),
                   ),
                 ],
@@ -440,6 +495,127 @@ class DashboardScreenState extends State<DashboardScreen>
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildQuickActionCard(
+            'Task Management',
+            'Manage your tasks',
+            Icons.task_alt,
+            const Color(0xFF667eea),
+            () {
+              Navigator.of(context).pushNamed('/tasks');
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionCard(
+            'Add Task',
+            'Create new task',
+            Icons.add_task,
+            const Color(0xFF38ef7d),
+            () {
+              Navigator.of(context).pushNamed('/add-task');
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.white.withOpacity(0.8),
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageSelector(BuildContext context, LocaleProvider localeProvider) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              AppLocalizations.of(context).language,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...LocaleProvider.supportedLocales.map((locale) {
+              final isSelected = localeProvider.locale.languageCode == locale.languageCode;
+              return ListTile(
+                leading: Icon(
+                  isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
+                  color: isSelected ? Theme.of(context).colorScheme.primary : null,
+                ),
+                title: Text(LocaleProvider.languageNames[locale.languageCode] ?? locale.languageCode),
+                onTap: () {
+                  localeProvider.setLocale(locale);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+          ],
+        ),
       ),
     );
   }
