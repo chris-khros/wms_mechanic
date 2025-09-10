@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
- 
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/login';
+class SignUpScreen extends StatefulWidget {
+  static const routeName = '/signup';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
+class _SignUpScreenState extends State<SignUpScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _specializationController = TextEditingController();
   
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   
   bool _obscurePassword = true;
-  bool _rememberMe = false;
+  bool _obscureConfirmPassword = true;
+  int _experienceYears = 1;
+
+  final List<String> _specializations = [
+    'General Mechanic',
+    'Engine Specialist',
+    'Transmission Specialist',
+    'Brake Specialist',
+    'Electrical Systems',
+    'Air Conditioning',
+    'Diesel Engine',
+    'Motorcycle Mechanic',
+    'Heavy Equipment',
+    'Other'
+  ];
 
   @override
   void initState() {
@@ -50,29 +67,33 @@ class _LoginScreenState extends State<LoginScreen>
     ));
     
     _animationController.forward();
-    
-    // Pre-fill with default credentials for demo
-    _emailController.text = 'john.smith@workshop.com';
-    _passwordController.text = 'password123';
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    _specializationController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleSignUp() async {
     if (!_formKey.currentState!.validate()) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     
     try {
-      final success = await authProvider.login(
-        _emailController.text.trim(),
-        _passwordController.text,
+      final success = await authProvider.register(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        phone: _phoneController.text.trim(),
+        specialization: _specializationController.text.trim(),
+        experienceYears: _experienceYears,
       );
 
       if (success) {
@@ -80,13 +101,13 @@ class _LoginScreenState extends State<LoginScreen>
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Login successful! Welcome back.'),
+              content: const Text('Registration successful! Welcome to WMS Mechanic.'),
               backgroundColor: Colors.green[600],
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              duration: const Duration(seconds: 2),
+              duration: const Duration(seconds: 3),
             ),
           );
           
@@ -100,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Invalid email or password. Please try again.'),
+              content: const Text('Registration failed. Email may already exist. Please try again.'),
               backgroundColor: Colors.red[600],
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -121,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login failed: ${e.toString()}'),
+            content: Text('Registration failed: ${e.toString()}'),
             backgroundColor: Colors.red[600],
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -169,18 +190,14 @@ class _LoginScreenState extends State<LoginScreen>
                       children: [
                         // Logo and Title
                         _buildHeader(),
-                        const SizedBox(height: 48),
-                        
-                        // Login Form
-                        _buildLoginForm(),
                         const SizedBox(height: 32),
                         
-                        // Demo Credentials Info
-                        _buildDemoInfo(),
-                        const SizedBox(height: 16),
+                        // Sign Up Form
+                        _buildSignUpForm(),
+                        const SizedBox(height: 24),
                         
-                        // Sign Up Link
-                        _buildSignUpLink(),
+                        // Sign In Link
+                        _buildSignInLink(),
                       ],
                     ),
                   ),
@@ -211,14 +228,14 @@ class _LoginScreenState extends State<LoginScreen>
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.build_circle,
+                    Icons.person_add,
                     size: 64,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'WMS Mechanic',
+                  'Join WMS Mechanic',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -227,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Workshop Management System',
+                  'Create your account to get started',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white.withOpacity(0.9),
@@ -241,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildSignUpForm() {
     return TweenAnimationBuilder<double>(
       duration: const Duration(milliseconds: 1000),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -270,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen>
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Welcome Back',
+                      'Create Account',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -280,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Sign in to your account',
+                      'Fill in your details below',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -289,20 +306,36 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                     const SizedBox(height: 32),
                     
+                    // Name Field
+                    _buildNameField(),
+                    const SizedBox(height: 20),
+                    
                     // Email Field
                     _buildEmailField(),
                     const SizedBox(height: 20),
                     
+                    // Phone Field
+                    _buildPhoneField(),
+                    const SizedBox(height: 20),
+                    
+                    // Specialization Field
+                    _buildSpecializationField(),
+                    const SizedBox(height: 20),
+                    
+                    // Experience Years Field
+                    _buildExperienceField(),
+                    const SizedBox(height: 20),
+                    
                     // Password Field
                     _buildPasswordField(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     
-                    // Remember Me
-                    _buildRememberMe(),
+                    // Confirm Password Field
+                    _buildConfirmPasswordField(),
                     const SizedBox(height: 32),
                     
-                    // Login Button
-                    _buildLoginButton(),
+                    // Sign Up Button
+                    _buildSignUpButton(),
                   ],
                 ),
               ),
@@ -313,59 +346,173 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  Widget _buildNameField() {
+    return TextFormField(
+      controller: _nameController,
+      keyboardType: TextInputType.name,
+      textCapitalization: TextCapitalization.words,
+      decoration: InputDecoration(
+        labelText: 'Full Name',
+        prefixIcon: const Icon(Icons.person_outlined),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your full name';
+        }
+        if (value.length < 2) {
+          return 'Name must be at least 2 characters';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildEmailField() {
     return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email',
-        hintText: 'Enter your email address',
-        prefixIcon: Container(
-          margin: const EdgeInsets.all(12),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF667eea).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(
-            Icons.email_outlined,
-            color: Color(0xFF667eea),
-            size: 20,
-          ),
-        ),
+        prefixIcon: const Icon(Icons.email_outlined),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
         filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        fillColor: Colors.grey[50],
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter your email';
         }
-        if (!value.contains('@')) {
+        if (!value.contains('@') || !value.contains('.')) {
           return 'Please enter a valid email';
         }
         return null;
       },
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return TextFormField(
+      controller: _phoneController,
+      keyboardType: TextInputType.phone,
+      decoration: InputDecoration(
+        labelText: 'Phone Number',
+        prefixIcon: const Icon(Icons.phone_outlined),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your phone number';
+        }
+        if (value.length < 10) {
+          return 'Please enter a valid phone number';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildSpecializationField() {
+    return DropdownButtonFormField<String>(
+      value: _specializationController.text.isEmpty ? null : _specializationController.text,
+      decoration: InputDecoration(
+        labelText: 'Specialization',
+        prefixIcon: const Icon(Icons.build_outlined),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+      ),
+      items: _specializations.map((String specialization) {
+        return DropdownMenuItem<String>(
+          value: specialization,
+          child: Text(specialization),
+        );
+      }).toList(),
+      onChanged: (String? newValue) {
+        setState(() {
+          _specializationController.text = newValue ?? '';
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please select your specialization';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildExperienceField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Years of Experience: $_experienceYears',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey[700],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Slider(
+          value: _experienceYears.toDouble(),
+          min: 0,
+          max: 50,
+          divisions: 50,
+          activeColor: const Color(0xFF667eea),
+          inactiveColor: Colors.grey[300],
+          onChanged: (double value) {
+            setState(() {
+              _experienceYears = value.round();
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -375,61 +522,34 @@ class _LoginScreenState extends State<LoginScreen>
       obscureText: _obscurePassword,
       decoration: InputDecoration(
         labelText: 'Password',
-        hintText: 'Enter your password',
-        prefixIcon: Container(
-          margin: const EdgeInsets.all(12),
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF667eea).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+        prefixIcon: const Icon(Icons.lock_outlined),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
           ),
-          child: const Icon(
-            Icons.lock_outlined,
-            color: Color(0xFF667eea),
-            size: 20,
-          ),
-        ),
-        suffixIcon: Container(
-          margin: const EdgeInsets.all(12),
-          child: IconButton(
-            icon: Icon(
-              _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: const Color(0xFF667eea),
-            ),
-            onPressed: () {
-              setState(() {
-                _obscurePassword = !_obscurePassword;
-              });
-            },
-          ),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
-        ),
         filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        fillColor: Colors.grey[50],
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter your password';
+          return 'Please enter a password';
         }
         if (value.length < 6) {
           return 'Password must be at least 6 characters';
@@ -439,70 +559,50 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildRememberMe() {
-    return Row(
-      children: [
-        Transform.scale(
-          scale: 1.2,
-          child: Checkbox(
-            value: _rememberMe,
-            onChanged: (value) {
-              setState(() {
-                _rememberMe = value ?? false;
-              });
-            },
-            activeColor: const Color(0xFF667eea),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            side: BorderSide(
-              color: const Color(0xFF667eea).withOpacity(0.5),
-              width: 2,
-            ),
+  Widget _buildConfirmPasswordField() {
+    return TextFormField(
+      controller: _confirmPasswordController,
+      obscureText: _obscureConfirmPassword,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        prefixIcon: const Icon(Icons.lock_outlined),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
           ),
-        ),
-        const SizedBox(width: 8),
-        const Text(
-          'Remember me',
-          style: TextStyle(
-            color: Color(0xFF4A5568),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const Spacer(),
-        TextButton(
           onPressed: () {
-            // Handle forgot password
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Forgot password feature coming soon!'),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: const Color(0xFF1E293B),
-              ),
-            );
+            setState(() {
+              _obscureConfirmPassword = !_obscureConfirmPassword;
+            });
           },
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            'Forgot Password?',
-            style: TextStyle(
-              color: Color(0xFF667eea),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ),
-      ],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF667eea), width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please confirm your password';
+        }
+        if (value != _passwordController.text) {
+          return 'Passwords do not match';
+        }
+        return null;
+      },
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildSignUpButton() {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return Container(
@@ -516,21 +616,21 @@ class _LoginScreenState extends State<LoginScreen>
                 Color(0xFF764ba2),
               ],
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF667eea).withOpacity(0.4),
+                color: const Color(0xFF667eea).withOpacity(0.3),
                 spreadRadius: 0,
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: authProvider.isLoading ? null : _handleLogin,
-              borderRadius: BorderRadius.circular(16),
+              onTap: authProvider.isLoading ? null : _handleSignUp,
+              borderRadius: BorderRadius.circular(12),
               child: Center(
                 child: authProvider.isLoading
                     ? const SizedBox(
@@ -538,28 +638,16 @@ class _LoginScreenState extends State<LoginScreen>
                         height: 24,
                         child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          strokeWidth: 3,
+                          strokeWidth: 2,
                         ),
                       )
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ],
+                    : const Text(
+                        'Create Account',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
                       ),
               ),
             ),
@@ -569,61 +657,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildDemoInfo() {
-    return TweenAnimationBuilder<double>(
-      duration: const Duration(milliseconds: 1200),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.white.withOpacity(0.9),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Demo Credentials',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white.withOpacity(0.9),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Email: john.smith@workshop.com\nPassword: password123',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withOpacity(0.8),
-                    height: 1.4,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildSignUpLink() {
+  Widget _buildSignInLink() {
     return TweenAnimationBuilder<double>(
       duration: const Duration(milliseconds: 1200),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -643,7 +677,7 @@ class _LoginScreenState extends State<LoginScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'New to WMS Mechanic? ',
+                  'Already have an account? ',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white.withOpacity(0.9),
@@ -651,10 +685,10 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('/signup');
+                    Navigator.of(context).pushReplacementNamed('/login');
                   },
                   child: const Text(
-                    'Create Account',
+                    'Sign In',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -670,5 +704,4 @@ class _LoginScreenState extends State<LoginScreen>
       },
     );
   }
-
 }

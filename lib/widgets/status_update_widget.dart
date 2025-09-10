@@ -14,21 +14,54 @@ class StatusUpdateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Update Job Status',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              Colors.grey.shade50,
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF667eea).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.update,
+                      color: Color(0xFF667eea),
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Update Job Status',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Color(0xFF2D3748),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 12),
-            _buildStatusDropdown(context),
-          ],
+              const SizedBox(height: 16),
+              _buildStatusDropdown(context),
+            ],
+          ),
         ),
       ),
     );
@@ -37,16 +70,31 @@ class StatusUpdateWidget extends StatelessWidget {
   Widget _buildStatusDropdown(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade300, width: 1.5),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<JobStatus>(
           value: job.status,
           isExpanded: true,
-          icon: const Icon(Icons.arrow_drop_down),
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.grey.shade600,
+          ),
           elevation: 16,
+          style: const TextStyle(
+            color: Color(0xFF2D3748),
+            fontWeight: FontWeight.w500,
+          ),
           onChanged: (JobStatus? newValue) {
             if (newValue != null && newValue != job.status) {
               _updateJobStatus(context, newValue);
@@ -58,8 +106,14 @@ class StatusUpdateWidget extends StatelessWidget {
               child: Row(
                 children: [
                   _buildStatusIndicator(value),
-                  const SizedBox(width: 8),
-                  Text(_getStatusText(value)),
+                  const SizedBox(width: 12),
+                  Text(
+                    _getStatusText(value),
+                    style: const TextStyle(
+                      color: Color(0xFF2D3748),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -72,11 +126,22 @@ class StatusUpdateWidget extends StatelessWidget {
   Widget _buildStatusIndicator(JobStatus status) {
     Color color = _getStatusColor(status);
     return Container(
-      width: 12,
-      height: 12,
+      width: 16,
+      height: 16,
       decoration: BoxDecoration(
-        color: color,
+        color: color.withOpacity(0.2),
         shape: BoxShape.circle,
+        border: Border.all(color: color, width: 2),
+      ),
+      child: Center(
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
       ),
     );
   }
@@ -112,13 +177,13 @@ class StatusUpdateWidget extends StatelessWidget {
   Color _getStatusColor(JobStatus status) {
     switch (status) {
       case JobStatus.accepted:
-        return Colors.blue;
+        return const Color(0xFF3B82F6); // Blue
       case JobStatus.inProgress:
-        return Colors.green;
+        return const Color(0xFF10B981); // Green
       case JobStatus.onHold:
-        return Colors.orange;
+        return const Color(0xFFF59E0B); // Amber
       case JobStatus.completed:
-        return Colors.purple;
+        return const Color(0xFF8B5CF6); // Purple
     }
   }
 } 

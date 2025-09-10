@@ -1,12 +1,28 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/profile_provider.dart';
 
-class PreferencesWidget extends StatelessWidget {
+class PreferencesWidget extends StatefulWidget {
   final Map<String, dynamic> preferences;
 
   const PreferencesWidget({
     Key? key,
     required this.preferences,
   }) : super(key: key);
+
+  @override
+  State<PreferencesWidget> createState() => _PreferencesWidgetState();
+}
+
+class _PreferencesWidgetState extends State<PreferencesWidget> {
+  Timer? _autoSaveTimer;
+
+  @override
+  void dispose() {
+    _autoSaveTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +64,7 @@ class PreferencesWidget extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              ...preferences.entries.map((entry) => _buildPreferenceRow(entry.key, entry.value)),
+              ...widget.preferences.entries.map((entry) => _buildPreferenceRow(entry.key, entry.value)),
             ],
           ),
         ),
@@ -82,9 +98,13 @@ class PreferencesWidget extends StatelessWidget {
           if (value is bool)
             Switch(
               value: value,
-              onChanged: null, // Read-only for now
+              onChanged: (newValue) {
+                _updatePreference(key, newValue);
+              },
               activeColor: Colors.blue,
             )
+          else if (key == 'language')
+            _buildLanguageSelector(value)
           else
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -103,6 +123,53 @@ class PreferencesWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildLanguageSelector(String currentLanguage) {
+    return DropdownButton<String>(
+      value: currentLanguage,
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          _updatePreference('language', newValue);
+        }
+      },
+      items: const [
+        DropdownMenuItem(value: 'en', child: Text('English')),
+        DropdownMenuItem(value: 'zh', child: Text('中文')),
+        DropdownMenuItem(value: 'ms', child: Text('Bahasa Malaysia')),
+      ],
+    );
+  }
+
+  void _updatePreference(String key, dynamic value) {
+    setState(() {
+      widget.preferences[key] = value;
+    });
+    _debounceAutoSave();
+  }
+
+  void _debounceAutoSave() {
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = Timer(const Duration(milliseconds: 500), () {
+      _autoSavePreferences();
+    });
+  }
+
+  void _autoSavePreferences() async {
+    try {
+      final profileProvider = context.read<ProfileProvider>();
+      await profileProvider.updatePreferences(widget.preferences);
+      // Silent auto-save - no success message
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error auto-saving preferences: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   String _getDisplayName(String key) {
@@ -134,4 +201,4 @@ class PreferencesWidget extends StatelessWidget {
         return Icons.settings;
     }
   }
-} 
+}

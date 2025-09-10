@@ -60,10 +60,38 @@ class _TaskListScreenState extends State<TaskListScreen>
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToAddTask(),
-        backgroundColor: const Color(0xFF667eea),
-        child: const Icon(Icons.add, color: Colors.white),
+      floatingActionButton: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = MediaQuery.of(context).size.width;
+          final isTablet = screenWidth > 600;
+          final isDesktop = screenWidth > 1200;
+          
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(isDesktop ? 20 : (isTablet ? 18 : 16)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF667eea).withOpacity(0.3),
+                  blurRadius: isDesktop ? 24 : (isTablet ? 22 : 20),
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: FloatingActionButton(
+              onPressed: () => _navigateToAddTask(),
+              backgroundColor: const Color(0xFF667eea),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(isDesktop ? 20 : (isTablet ? 18 : 16)),
+              ),
+              child: Icon(
+                Icons.add, 
+                color: Colors.white, 
+                size: isDesktop ? 32 : (isTablet ? 30 : 28),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -71,8 +99,12 @@ class _TaskListScreenState extends State<TaskListScreen>
   Widget _buildSliverAppBar() {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isTablet = screenWidth > 600;
+        final isDesktop = screenWidth > 1200;
+        
         return SliverAppBar(
-          expandedHeight: 360.0,
+          expandedHeight: isDesktop ? 320.0 : (isTablet ? 340.0 : 360.0),
           floating: false,
           pinned: true,
           elevation: 0,
@@ -91,7 +123,7 @@ class _TaskListScreenState extends State<TaskListScreen>
               ),
               child: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(isDesktop ? 32.0 : (isTablet ? 24.0 : 20.0)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -103,17 +135,17 @@ class _TaskListScreenState extends State<TaskListScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Welcome back,',
+                                  AppLocalizations.of(context).welcome,
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: isDesktop ? 18 : (isTablet ? 17 : 16),
                                     color: Colors.white.withOpacity(0.9),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   authProvider.mechanicName,
-                                  style: const TextStyle(
-                                    fontSize: 24,
+                                  style: TextStyle(
+                                    fontSize: isDesktop ? 28 : (isTablet ? 26 : 24),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -128,21 +160,21 @@ class _TaskListScreenState extends State<TaskListScreen>
                                   return GestureDetector(
                                     onTap: () => _showLanguageSelector(context, localeProvider),
                                     child: Container(
-                                      padding: const EdgeInsets.all(12),
+                                      padding: EdgeInsets.all(isDesktop ? 16 : (isTablet ? 14 : 12)),
                                       decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.language,
                                         color: Colors.white,
-                                        size: 24,
+                                        size: isDesktop ? 28 : (isTablet ? 26 : 24),
                                       ),
                                     ),
                                   );
                                 },
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: isDesktop ? 16 : (isTablet ? 14 : 12)),
                               Consumer<ThemeProvider>(
                                 builder: (context, themeProvider, child) {
                                   return GestureDetector(
@@ -150,7 +182,7 @@ class _TaskListScreenState extends State<TaskListScreen>
                                       themeProvider.toggleTheme();
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.all(12),
+                                      padding: EdgeInsets.all(isDesktop ? 16 : (isTablet ? 14 : 12)),
                                       decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(12),
@@ -160,27 +192,27 @@ class _TaskListScreenState extends State<TaskListScreen>
                                             ? Icons.light_mode 
                                             : Icons.dark_mode,
                                         color: Colors.white,
-                                        size: 24,
+                                        size: isDesktop ? 28 : (isTablet ? 26 : 24),
                                       ),
                                     ),
                                   );
                                 },
                               ),
-                              const SizedBox(width: 12),
+                              SizedBox(width: isDesktop ? 16 : (isTablet ? 14 : 12)),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).pushNamed(ProfileScreen.routeName);
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.all(12),
+                                  padding: EdgeInsets.all(isDesktop ? 16 : (isTablet ? 14 : 12)),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.person,
                                     color: Colors.white,
-                                    size: 24,
+                                    size: isDesktop ? 28 : (isTablet ? 26 : 24),
                                   ),
                                 ),
                               ),
@@ -194,26 +226,26 @@ class _TaskListScreenState extends State<TaskListScreen>
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: EdgeInsets.all(isDesktop ? 16 : (isTablet ? 14 : 12)),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.task_alt,
                               color: Colors.white,
-                              size: 24,
+                              size: isDesktop ? 28 : (isTablet ? 26 : 24),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: isDesktop ? 20 : (isTablet ? 18 : 16)),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.jobId != null ? 'Job Tasks' : AppLocalizations.of(context).taskManagement,
-                                  style: const TextStyle(
-                                    fontSize: 24,
+                                  widget.jobId != null ? AppLocalizations.of(context).jobTasks : AppLocalizations.of(context).taskManagement,
+                                  style: TextStyle(
+                                    fontSize: isDesktop ? 28 : (isTablet ? 26 : 24),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -221,10 +253,10 @@ class _TaskListScreenState extends State<TaskListScreen>
                                 const SizedBox(height: 4),
                                 Text(
                                   widget.jobId != null 
-                                      ? 'Tasks for this job'
-                                      : 'Manage your tasks efficiently',
+                                      ? AppLocalizations.of(context).tasksForThisJob
+                                      : AppLocalizations.of(context).manageTasksEfficiently,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: isDesktop ? 16 : (isTablet ? 15 : 14),
                                     color: Colors.white.withOpacity(0.9),
                                   ),
                                 ),
@@ -242,30 +274,89 @@ class _TaskListScreenState extends State<TaskListScreen>
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
+            preferredSize: const Size.fromHeight(70), // Increased height for better text visibility
             child: Container(
+              height: 70, // Increased height to prevent text truncation
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, -2),
+                  ),
+                ],
               ),
               child: TabBar(
                 controller: _tabController,
+                isScrollable: false, // Disable scrolling to keep tabs fixed
                 labelColor: Theme.of(context).colorScheme.primary,
                 unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 indicatorColor: Theme.of(context).colorScheme.primary,
-                indicatorWeight: 3,
+                indicatorWeight: 3, // Fixed indicator weight
+                indicatorSize: TabBarIndicatorSize.label, // Fixed indicator size
                 labelStyle: const TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 12,
                 ),
+                unselectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+                tabAlignment: TabAlignment.fill, // Always fill available space
                 tabs: [
-                  Tab(text: AppLocalizations.of(context).pending),
-                  Tab(text: AppLocalizations.of(context).inProgress),
-                  Tab(text: AppLocalizations.of(context).completed),
-                  Tab(text: AppLocalizations.of(context).allTasks),
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                      child: Text(
+                        AppLocalizations.of(context).pending,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                      child: Text(
+                        AppLocalizations.of(context).inProgress,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                      child: Text(
+                        AppLocalizations.of(context).completed,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                      child: Text(
+                        AppLocalizations.of(context).allTasks,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -276,33 +367,72 @@ class _TaskListScreenState extends State<TaskListScreen>
   }
 
   Widget _buildSearchBar() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
+    final isDesktop = screenWidth > 1200;
+    
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(isDesktop ? 20 : (isTablet ? 18 : 16)),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.grey.withOpacity(0.3),
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: isDesktop ? 12 : (isTablet ? 10 : 8),
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: TextField(
         controller: _searchController,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: isDesktop ? 18 : (isTablet ? 17 : 16),
+          fontWeight: FontWeight.w500,
+        ),
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).searchTasks,
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-          prefixIcon: Icon(Icons.search, color: Colors.white.withOpacity(0.7)),
+          hintStyle: TextStyle(
+            color: Colors.grey[600],
+            fontSize: isDesktop ? 18 : (isTablet ? 17 : 16),
+            fontWeight: FontWeight.w400,
+          ),
+          prefixIcon: Container(
+            margin: EdgeInsets.all(isDesktop ? 16 : (isTablet ? 14 : 12)),
+            padding: EdgeInsets.all(isDesktop ? 12 : (isTablet ? 10 : 8)),
+            decoration: BoxDecoration(
+              color: const Color(0xFF667eea).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.search,
+              color: const Color(0xFF667eea),
+              size: isDesktop ? 26 : (isTablet ? 24 : 22),
+            ),
+          ),
           suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: Icon(Icons.clear, color: Colors.white.withOpacity(0.7)),
-                  onPressed: () {
-                    _searchController.clear();
-                    Provider.of<TasksProvider>(context, listen: false)
-                        .setSearchQuery('');
-                  },
+              ? Container(
+                  margin: const EdgeInsets.all(12),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.grey[600],
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                      Provider.of<TasksProvider>(context, listen: false)
+                          .setSearchQuery('');
+                    },
+                  ),
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         ),
         onChanged: (value) {
           Provider.of<TasksProvider>(context, listen: false).setSearchQuery(value);
@@ -343,36 +473,7 @@ class _TaskListScreenState extends State<TaskListScreen>
             await tasksProvider.refreshTasks();
           },
           color: const Color(0xFF667eea),
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-              return TweenAnimationBuilder<double>(
-                duration: Duration(milliseconds: 400 + (index * 100)),
-                tween: Tween(begin: 0.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Transform.translate(
-                    offset: Offset(0, 20 * (1 - value)),
-                    child: Opacity(
-                      opacity: value,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: TaskCard(
-                          task: task,
-                          onTap: () => _showTaskDetails(task),
-                          onEdit: () => _editTask(task),
-                          onDelete: () => _deleteTask(task),
-                          onStatusChanged: (newStatus) => _updateTaskStatus(task, newStatus),
-                          onPriorityChanged: (newPriority) => _updateTaskPriority(task, newPriority),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+          child: _buildResponsiveTaskList(tasks),
         );
       },
     );
@@ -405,35 +506,71 @@ class _TaskListScreenState extends State<TaskListScreen>
             await tasksProvider.refreshTasks();
           },
           color: const Color(0xFF667eea),
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-              return TweenAnimationBuilder<double>(
-                duration: Duration(milliseconds: 400 + (index * 100)),
-                tween: Tween(begin: 0.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Transform.translate(
-                    offset: Offset(0, 20 * (1 - value)),
-                    child: Opacity(
-                      opacity: value,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: TaskCard(
-                          task: task,
-                          onTap: () => _showTaskDetails(task),
-                          onEdit: () => _editTask(task),
-                          onDelete: () => _deleteTask(task),
-                          onStatusChanged: (newStatus) => _updateTaskStatus(task, newStatus),
-                          onPriorityChanged: (newPriority) => _updateTaskPriority(task, newPriority),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
+          child: _buildResponsiveTaskList(tasks),
+        );
+      },
+    );
+  }
+
+  Widget _buildResponsiveTaskList(List<Task> tasks) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
+    final isDesktop = screenWidth > 1200;
+    
+    // Calculate cross axis count based on screen size
+    int crossAxisCount = 1; // Mobile
+    if (isDesktop) {
+      crossAxisCount = 3; // Desktop: 3 columns
+    } else if (isTablet) {
+      crossAxisCount = 2; // Tablet: 2 columns
+    }
+    
+    if (crossAxisCount == 1) {
+      // Use ListView for mobile
+      return ListView.builder(
+        padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
+        itemCount: tasks.length,
+        itemBuilder: (context, index) {
+          final task = tasks[index];
+          return _buildAnimatedTaskCard(task, index);
+        },
+      );
+    } else {
+      // Use GridView for tablet and desktop
+      return GridView.builder(
+        padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          childAspectRatio: isDesktop ? 1.1 : 1.0,
+          crossAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
+          mainAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
+        ),
+        itemCount: tasks.length,
+        itemBuilder: (context, index) {
+          final task = tasks[index];
+          return _buildAnimatedTaskCard(task, index);
+        },
+      );
+    }
+  }
+
+  Widget _buildAnimatedTaskCard(Task task, int index) {
+    return TweenAnimationBuilder<double>(
+      duration: Duration(milliseconds: 400 + (index * 100)),
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - value)),
+          child: Opacity(
+            opacity: value,
+            child: TaskCard(
+              task: task,
+              onTap: () => _showTaskDetails(task),
+              onEdit: () => _editTask(task),
+              onDelete: () => _deleteTask(task),
+              onStatusChanged: (newStatus) => _updateTaskStatus(task, newStatus),
+              onPriorityChanged: (newPriority) => _updateTaskPriority(task, newPriority),
+            ),
           ),
         );
       },
@@ -445,7 +582,7 @@ class _TaskListScreenState extends State<TaskListScreen>
     IconData icon;
     
     if (widget.jobId != null) {
-      message = 'No tasks found for this job';
+      message = AppLocalizations.of(context).noTasksForJob;
       icon = Icons.work_off;
     } else {
       switch (status) {
@@ -467,54 +604,98 @@ class _TaskListScreenState extends State<TaskListScreen>
       }
     }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              shape: BoxShape.circle,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isTablet = screenWidth > 600;
+        final isDesktop = screenWidth > 1200;
+        
+        return Center(
+          child: Padding(
+            padding: EdgeInsets.all(isDesktop ? 48 : (isTablet ? 40 : 32)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(isDesktop ? 48 : (isTablet ? 40 : 32)),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                size: isDesktop ? 96 : (isTablet ? 84 : 72),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+              ),
             ),
-            child: Icon(
-              icon,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+            SizedBox(height: isDesktop ? 40 : (isTablet ? 36 : 32)),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: isDesktop ? 24 : (isTablet ? 22 : 20),
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+                letterSpacing: -0.5,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 18,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              fontWeight: FontWeight.w500,
+            SizedBox(height: isDesktop ? 16 : (isTablet ? 14 : 12)),
+            Text(
+              widget.jobId != null 
+                  ? AppLocalizations.of(context).addTasksToJob
+                  : AppLocalizations.of(context).createFirstTask,
+              style: TextStyle(
+                fontSize: isDesktop ? 18 : (isTablet ? 17 : 16),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            widget.jobId != null 
-                ? 'Add tasks to this job to get started'
-                : AppLocalizations.of(context).createFirstTask,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            SizedBox(height: isDesktop ? 40 : (isTablet ? 36 : 32)),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF667eea).withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ElevatedButton.icon(
+                onPressed: _navigateToAddTask,
+                icon: const Icon(Icons.add, size: 20),
+                label: Text(
+                  AppLocalizations.of(context).addTask,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF667eea),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  elevation: 0,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: _navigateToAddTask,
-            icon: const Icon(Icons.add),
-            label: Text(AppLocalizations.of(context).addTask),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF667eea),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+      },
     );
   }
 
@@ -534,10 +715,11 @@ class _TaskListScreenState extends State<TaskListScreen>
   }
 
   void _editTask(Task task) {
-    // TODO: Implement edit task functionality
+    // Placeholder for edit task functionality
+    // In a real implementation, this would navigate to an edit task screen
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Edit task functionality coming soon!'),
+        content: Text('Edit task functionality would be implemented here'),
         backgroundColor: Colors.orange,
       ),
     );
@@ -659,10 +841,6 @@ class _TaskListScreenState extends State<TaskListScreen>
       case TaskPriority.urgent:
         return 'Urgent';
     }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 
   void _showLanguageSelector(BuildContext context, LocaleProvider localeProvider) {

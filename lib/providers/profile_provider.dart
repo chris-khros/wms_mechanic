@@ -3,21 +3,29 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user_profile.dart';
+import 'auth_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
   UserProfile? _userProfile;
   bool _isLoading = false;
   String? _error;
+  AuthProvider? _authProvider;
 
   UserProfile? get userProfile => _userProfile;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasProfile => _userProfile != null && _userProfile!.name.isNotEmpty;
+  bool get isAuthenticated => _authProvider?.isAuthenticated ?? false;
 
   static const String _profileKey = 'user_profile';
 
   ProfileProvider() {
     _loadProfile();
+  }
+
+  void setAuthProvider(AuthProvider authProvider) {
+    _authProvider = authProvider;
+    _syncWithAuthProvider();
   }
 
   Future<void> _loadProfile() async {
@@ -30,34 +38,8 @@ class ProfileProvider with ChangeNotifier {
         final profileData = json.decode(profileJson);
         _userProfile = UserProfile.fromJson(profileData);
       } else {
-        // Create a default profile for demo purposes
-        _userProfile = UserProfile(
-          id: '1',
-          name: 'John Doe',
-          email: 'john.doe@wms.com',
-          phoneNumber: '+1 (555) 123-4567',
-          employeeId: 'EMP001',
-          department: 'Mechanical Services',
-          position: 'Senior Mechanic',
-          address: '123 Workshop St, City, State 12345',
-          dateOfBirth: DateTime(1990, 5, 15),
-          hireDate: DateTime(2020, 3, 1),
-          skills: [
-            'Engine Repair',
-            'Transmission Service',
-            'Brake Systems',
-            'Electrical Diagnostics',
-            'HVAC Systems',
-            'Hydraulic Systems',
-          ],
-          preferences: {
-            'notifications': true,
-            'darkMode': false,
-            'language': 'en',
-            'autoSave': true,
-          },
-        );
-        await _saveProfile();
+        // Create profile from AuthProvider data if available
+        await _createProfileFromAuth();
       }
       _error = null;
     } catch (e) {
@@ -65,6 +47,91 @@ class ProfileProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> _createProfileFromAuth() async {
+    if (_authProvider?.isAuthenticated == true && _authProvider?.currentMechanic != null) {
+      final mechanic = _authProvider!.currentMechanic!;
+      
+      _userProfile = UserProfile(
+        id: mechanic['id'] ?? '1',
+        name: mechanic['name'] ?? 'Unknown User',
+        email: mechanic['email'] ?? '',
+        phoneNumber: mechanic['phone'] ?? '',
+        employeeId: mechanic['id'] ?? '',
+        department: 'Mechanical Services',
+        position: 'Mechanic',
+        skills: _parseSkillsFromSpecialization(mechanic['specialization'] ?? ''),
+        preferences: {
+          'notifications': true,
+          'darkMode': false,
+          'language': 'en',
+          'autoSave': true,
+        },
+      );
+      await _saveProfile();
+    } else {
+      // Create a default profile for demo purposes if not authenticated
+      _userProfile = UserProfile(
+        id: '1',
+        name: 'Demo User',
+        email: 'demo@wms.com',
+        phoneNumber: '+1 (555) 123-4567',
+        employeeId: 'DEMO001',
+        department: 'Mechanical Services',
+        position: 'Demo Mechanic',
+        address: '123 Workshop St, City, State 12345',
+        dateOfBirth: DateTime(1990, 5, 15),
+        hireDate: DateTime(2020, 3, 1),
+        skills: [
+          'Engine Repair',
+          'Transmission Service',
+          'Brake Systems',
+          'Electrical Diagnostics',
+          'HVAC Systems',
+          'Hydraulic Systems',
+        ],
+        preferences: {
+          'notifications': true,
+          'darkMode': false,
+          'language': 'en',
+          'autoSave': true,
+        },
+      );
+      await _saveProfile();
+    }
+  }
+
+  void _syncWithAuthProvider() {
+    if (_authProvider?.isAuthenticated == true && _authProvider?.currentMechanic != null) {
+      final mechanic = _authProvider!.currentMechanic!;
+      
+      // Update profile with current auth data
+      if (_userProfile != null) {
+        _userProfile = _userProfile!.copyWith(
+          name: mechanic['name'] ?? _userProfile!.name,
+          email: mechanic['email'] ?? _userProfile!.email,
+          phoneNumber: mechanic['phone'] ?? _userProfile!.phoneNumber,
+        );
+        _saveProfile();
+      } else {
+        _createProfileFromAuth();
+      }
+    }
+  }
+
+  List<String> _parseSkillsFromSpecialization(String specialization) {
+    if (specialization.isEmpty) {
+      return [
+        'Engine Repair',
+        'Transmission Service',
+        'Brake Systems',
+        'Electrical Diagnostics',
+      ];
+    }
+    
+    // Parse specialization into skills
+    return specialization.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
   }
 
   Future<void> _saveProfile() async {

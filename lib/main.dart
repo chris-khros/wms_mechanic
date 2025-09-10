@@ -12,6 +12,7 @@ import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/job_details_screen.dart';
 import 'screens/job_sections_screen.dart';
@@ -24,6 +25,7 @@ import 'screens/edit_profile_screen.dart';
 import 'screens/task_list_screen.dart';
 import 'screens/task_details_screen.dart';
 import 'screens/add_task_screen.dart';
+import 'database/database_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,24 @@ Future<void> main() async {
   if (kIsWeb) {
     databaseFactory = databaseFactoryFfiWeb;
   }
+  
+  // Initialize database and handle any schema issues
+  try {
+    final dbHelper = DatabaseHelper();
+    await dbHelper.database; // This will trigger database creation/upgrade
+    debugPrint('Database initialized successfully');
+  } catch (e) {
+    debugPrint('Database initialization error: $e');
+    // If there's a schema issue, recreate the database
+    try {
+      final dbHelper = DatabaseHelper();
+      await dbHelper.recreateDatabase();
+      debugPrint('Database recreated successfully');
+    } catch (recreateError) {
+      debugPrint('Database recreation failed: $recreateError');
+    }
+  }
+  
   runApp(const MyApp());
 }
 
@@ -75,6 +95,7 @@ class MyApp extends StatelessWidget {
             home: const AuthWrapper(),
             routes: {
               LoginScreen.routeName: (ctx) => const LoginScreen(),
+              SignUpScreen.routeName: (ctx) => const SignUpScreen(),
               '/dashboard': (ctx) => const TaskListScreen(),
               '/jobs': (ctx) => const DashboardScreen(),
               JobDetailsScreen.routeName: (ctx) => const JobDetailsScreen(),
@@ -116,6 +137,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Future<void> _initializeApp() async {
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      
+      // Connect ProfileProvider with AuthProvider
+      profileProvider.setAuthProvider(authProvider);
+      
       await authProvider.checkAuthStatus();
     } catch (e) {
       debugPrint('Error initializing app: $e');

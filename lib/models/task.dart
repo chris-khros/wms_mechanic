@@ -39,6 +39,7 @@ class Task {
   final List<String> tags;
   final String? notes;
   final String? location;
+  final List<String> photos;
 
   Task({
     required this.id,
@@ -57,6 +58,7 @@ class Task {
     this.tags = const [],
     this.notes,
     this.location,
+    this.photos = const [],
   });
 
   Task copyWith({
@@ -76,6 +78,7 @@ class Task {
     List<String>? tags,
     String? notes,
     String? location,
+    List<String>? photos,
   }) {
     return Task(
       id: id ?? this.id,
@@ -94,6 +97,7 @@ class Task {
       tags: tags ?? this.tags,
       notes: notes ?? this.notes,
       location: location ?? this.location,
+      photos: photos ?? this.photos,
     );
   }
 
@@ -115,6 +119,7 @@ class Task {
       'tags': tags.join(','),
       'notes': notes,
       'location': location,
+      'photos': photos.join(','),
     };
   }
 
@@ -142,6 +147,7 @@ class Task {
       tags: map['tags'] != null ? (map['tags'] as String).split(',').where((tag) => tag.isNotEmpty).toList() : [],
       notes: map['notes'] as String?,
       location: map['location'] as String?,
+      photos: map['photos'] != null ? (map['photos'] as String).split(',').where((photo) => photo.isNotEmpty).toList() : [],
     );
   }
 

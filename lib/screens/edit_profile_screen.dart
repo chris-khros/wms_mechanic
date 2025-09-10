@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
@@ -24,6 +25,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   DateTime? _selectedDateOfBirth;
   DateTime? _selectedHireDate;
   List<String> _skills = [];
+  Timer? _autoSaveTimer;
   final List<String> _availableSkills = [
     'Engine Repair',
     'Transmission Service',
@@ -69,6 +71,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void dispose() {
+    _autoSaveTimer?.cancel();
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -86,9 +89,11 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         title: const Text('Edit Profile'),
         actions: [
           TextButton(
-            onPressed: _saveProfile,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
             child: const Text(
-              'Save',
+              'Done',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -222,20 +227,6 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                   _buildSkillsSelector(),
                   const SizedBox(height: 24),
 
-                  // Save Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _saveProfile,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      child: const Text(
-                        'Save Changes',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -274,6 +265,10 @@ class EditProfileScreenState extends State<EditProfileScreen> {
       keyboardType: keyboardType,
       maxLines: maxLines,
       validator: validator,
+      onChanged: (value) {
+        // Auto-save on text change with debouncing
+        _debounceAutoSave();
+      },
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
@@ -302,6 +297,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         );
         if (date != null) {
           onDateSelected(date);
+          _debounceAutoSave();
         }
       },
       child: Container(
@@ -361,6 +357,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                     _skills.remove(skill);
                   }
                 });
+                _debounceAutoSave();
               },
               selectedColor: Theme.of(context).primaryColor.withOpacity(0.2),
               checkmarkColor: Theme.of(context).primaryColor,
@@ -410,7 +407,14 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _saveProfile() async {
+  void _debounceAutoSave() {
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = Timer(const Duration(milliseconds: 500), () {
+      _autoSaveProfile();
+    });
+  }
+
+  void _autoSaveProfile() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -435,14 +439,6 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
     await profileProvider.updateProfile(updatedProfile);
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile updated successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.of(context).pop();
-    }
+    // Silent auto-save - no success message or navigation
   }
 } 

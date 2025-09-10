@@ -102,6 +102,65 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    required String name,
+    required String email,
+    required String password,
+    required String phone,
+    required String specialization,
+    required int experienceYears,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // Ensure database is initialized and verified
+      await _dbHelper.database;
+      await _dbHelper.verifyDatabaseIntegrity();
+      
+      final mechanicId = await _dbHelper.registerMechanic(
+        name: name,
+        email: email,
+        password: password,
+        phone: phone,
+        specialization: specialization,
+        experienceYears: experienceYears,
+      );
+      
+      if (mechanicId != null) {
+        // Auto-login after successful registration
+        final mechanic = await _dbHelper.authenticateMechanic(email, password);
+        if (mechanic != null) {
+          _currentMechanic = mechanic;
+          _isAuthenticated = true;
+          
+          // Store mechanic ID for auto-login
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('mechanic_id', mechanic['id']);
+          
+          debugPrint('Registration and auto-login successful for: ${mechanic['name']}');
+          _isLoading = false;
+          notifyListeners();
+          return true;
+        }
+      } else {
+        debugPrint('Registration failed: Email already exists or database error');
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      debugPrint('Registration error: $e');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+    
+    _isLoading = false;
+    notifyListeners();
+    return false;
+  }
+
   Future<bool> updateProfile({
     required String name,
     required String phone,

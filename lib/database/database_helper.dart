@@ -23,7 +23,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'wms_mechanic.db');
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onOpen: (db) {
@@ -136,6 +136,7 @@ class DatabaseHelper {
         tags TEXT,
         notes TEXT,
         location TEXT,
+        photos TEXT,
         FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE SET NULL
       )
     ''');
@@ -172,6 +173,7 @@ class DatabaseHelper {
           tags TEXT,
           notes TEXT,
           location TEXT,
+          photos TEXT,
           FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE SET NULL
         )
       ''');
@@ -180,6 +182,16 @@ class DatabaseHelper {
       await _insertSampleTasks(db);
       
       debugPrint('Tasks table created and sample data inserted');
+    }
+    
+    if (oldVersion < 3) {
+      // Add photos column to existing tasks table for version 3
+      try {
+        await db.execute('ALTER TABLE tasks ADD COLUMN photos TEXT');
+        debugPrint('Added photos column to tasks table');
+      } catch (e) {
+        debugPrint('Photos column might already exist: $e');
+      }
     }
   }
 
@@ -203,6 +215,7 @@ class DatabaseHelper {
         'tags': 'oil,maintenance,routine',
         'notes': 'Customer requested synthetic oil',
         'location': 'Bay 1',
+        'photos': '',
       },
       {
         'id': 'task_002',
@@ -221,6 +234,7 @@ class DatabaseHelper {
         'tags': 'engine,diagnostic,urgent',
         'notes': 'Customer reported strange noises',
         'location': 'Bay 2',
+        'photos': '',
       },
       {
         'id': 'task_003',
@@ -239,6 +253,178 @@ class DatabaseHelper {
         'tags': 'brakes,repair,front',
         'notes': 'Customer approved premium brake pads',
         'location': 'Bay 1',
+        'photos': '',
+      },
+      {
+        'id': 'task_004',
+        'title': 'Transmission Fluid Service',
+        'description': 'Replace transmission fluid and filter',
+        'priority': 'medium',
+        'status': 'pending',
+        'category': 'maintenance',
+        'created_at': DateTime.now().subtract(const Duration(hours: 6)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(days: 2)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 90,
+        'actual_duration_minutes': 0,
+        'tags': 'transmission,fluid,maintenance',
+        'notes': 'High mileage vehicle - use premium fluid',
+        'location': 'Bay 3',
+        'photos': '',
+      },
+      {
+        'id': 'task_005',
+        'title': 'AC System Inspection',
+        'description': 'Check AC system performance and refrigerant levels',
+        'priority': 'low',
+        'status': 'inProgress',
+        'category': 'inspection',
+        'created_at': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(hours: 3)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 45,
+        'actual_duration_minutes': 15,
+        'tags': 'ac,climate,inspection',
+        'notes': 'Customer complains of weak cooling',
+        'location': 'Bay 4',
+        'photos': '',
+      },
+      {
+        'id': 'task_006',
+        'title': 'Battery Replacement',
+        'description': 'Replace dead battery and test charging system',
+        'priority': 'high',
+        'status': 'completed',
+        'category': 'repair',
+        'created_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+        'due_date': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+        'completed_at': DateTime.now().subtract(const Duration(days: 2, hours: 2)).toIso8601String(),
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 30,
+        'actual_duration_minutes': 35,
+        'tags': 'battery,electrical,replacement',
+        'notes': 'Installed premium AGM battery',
+        'location': 'Bay 1',
+        'photos': '',
+      },
+      {
+        'id': 'task_007',
+        'title': 'Tire Rotation & Balance',
+        'description': 'Rotate tires and balance all wheels',
+        'priority': 'low',
+        'status': 'pending',
+        'category': 'maintenance',
+        'created_at': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(days: 3)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 60,
+        'actual_duration_minutes': 0,
+        'tags': 'tires,rotation,balance',
+        'notes': 'Regular maintenance service',
+        'location': 'Bay 2',
+        'photos': '',
+      },
+      {
+        'id': 'task_008',
+        'title': 'Spark Plug Replacement',
+        'description': 'Replace all spark plugs and check ignition system',
+        'priority': 'medium',
+        'status': 'inProgress',
+        'category': 'maintenance',
+        'created_at': DateTime.now().subtract(const Duration(minutes: 30)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(hours: 4)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 75,
+        'actual_duration_minutes': 20,
+        'tags': 'spark,plugs,ignition',
+        'notes': 'V6 engine - 6 spark plugs needed',
+        'location': 'Bay 3',
+        'photos': '',
+      },
+      {
+        'id': 'task_009',
+        'title': 'Wheel Alignment Check',
+        'description': 'Check and adjust wheel alignment settings',
+        'priority': 'medium',
+        'status': 'pending',
+        'category': 'inspection',
+        'created_at': DateTime.now().subtract(const Duration(hours: 4)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(days: 1)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 45,
+        'actual_duration_minutes': 0,
+        'tags': 'alignment,wheels,suspension',
+        'notes': 'Customer reports pulling to the right',
+        'location': 'Bay 4',
+        'photos': '',
+      },
+      {
+        'id': 'task_010',
+        'title': 'Timing Belt Replacement',
+        'description': 'Replace timing belt and water pump',
+        'priority': 'urgent',
+        'status': 'pending',
+        'category': 'repair',
+        'created_at': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(hours: 6)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 180,
+        'actual_duration_minutes': 0,
+        'tags': 'timing,belt,water,pump',
+        'notes': 'High mileage - critical maintenance',
+        'location': 'Bay 1',
+        'photos': '',
+      },
+      {
+        'id': 'task_011',
+        'title': 'Customer Service Call',
+        'description': 'Follow up with customer about service satisfaction',
+        'priority': 'low',
+        'status': 'completed',
+        'category': 'customerService',
+        'created_at': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+        'due_date': DateTime.now().subtract(const Duration(hours: 2)).toIso8601String(),
+        'completed_at': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 15,
+        'actual_duration_minutes': 12,
+        'tags': 'customer,service,followup',
+        'notes': 'Customer very satisfied with brake service',
+        'location': 'Office',
+        'photos': '',
+      },
+      {
+        'id': 'task_012',
+        'title': 'Inventory Update',
+        'description': 'Update parts inventory and order supplies',
+        'priority': 'medium',
+        'status': 'pending',
+        'category': 'administrative',
+        'created_at': DateTime.now().subtract(const Duration(hours: 8)).toIso8601String(),
+        'due_date': DateTime.now().add(const Duration(days: 1)).toIso8601String(),
+        'completed_at': null,
+        'assigned_to': 'mech_001',
+        'job_id': null,
+        'estimated_duration_minutes': 120,
+        'actual_duration_minutes': 0,
+        'tags': 'inventory,parts,ordering',
+        'notes': 'Need to order brake pads and filters',
+        'location': 'Office',
+        'photos': '',
       },
     ];
 
@@ -431,6 +617,54 @@ class DatabaseHelper {
       return result.first;
     }
     return null;
+  }
+
+  Future<String?> registerMechanic({
+    required String name,
+    required String email,
+    required String password,
+    required String phone,
+    required String specialization,
+    required int experienceYears,
+  }) async {
+    final db = await database;
+    debugPrint('Attempting to register new mechanic: $email');
+    
+    try {
+      // Check if email already exists
+      final existingMechanic = await db.query(
+        'mechanics',
+        where: 'email = ?',
+        whereArgs: [email],
+      );
+      
+      if (existingMechanic.isNotEmpty) {
+        debugPrint('Email $email already exists');
+        return null; // Email already exists
+      }
+      
+      // Generate unique ID
+      final id = DateTime.now().millisecondsSinceEpoch.toString();
+      final createdAt = DateTime.now().toIso8601String();
+      
+      // Insert new mechanic
+      await db.insert('mechanics', {
+        'id': id,
+        'name': name,
+        'email': email,
+        'password': password,
+        'phone': phone,
+        'specialization': specialization,
+        'experience_years': experienceYears,
+        'created_at': createdAt,
+      });
+      
+      debugPrint('Mechanic registered successfully: $name ($email)');
+      return id;
+    } catch (e) {
+      debugPrint('Error registering mechanic: $e');
+      return null;
+    }
   }
 
   // Job operations
@@ -670,6 +904,26 @@ class DatabaseHelper {
       debugPrint('Database reset completed with sample tasks');
     } catch (e) {
       debugPrint('Database reset failed: $e');
+    }
+  }
+
+  Future<void> recreateDatabase() async {
+    try {
+      // Close the current database
+      if (_database != null) {
+        await _database!.close();
+        _database = null;
+      }
+      
+      // Delete the database file
+      String path = join(await getDatabasesPath(), 'wms_mechanic.db');
+      await databaseFactory.deleteDatabase(path);
+      
+      // Recreate the database
+      _database = await _initDatabase();
+      debugPrint('Database recreated successfully');
+    } catch (e) {
+      debugPrint('Database recreation failed: $e');
     }
   }
 

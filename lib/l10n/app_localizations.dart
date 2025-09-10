@@ -46,6 +46,7 @@ class AppLocalizations {
       'pending': 'Pending',
       'inProgress': 'In Progress',
       'completed': 'Completed',
+      'cancelled': 'Cancelled',
       'allTasks': 'All Tasks',
       'profile': 'Profile',
       'editProfile': 'Edit Profile',
@@ -72,6 +73,43 @@ class AppLocalizations {
       'dueDate': 'Due Date',
       'location': 'Location',
       'notes': 'Notes',
+      'detailsTab': 'Details',
+      'timeTrackingTab': 'Time Tracking',
+      'notesPhotosTab': 'Notes & Photos',
+      'signOffTab': 'Sign Off',
+      'jobTasks': 'Job Tasks',
+      'tasksForThisJob': 'Tasks for this job',
+      'manageTasksEfficiently': 'Manage your tasks efficiently',
+      'noTasksForJob': 'No tasks found for this job',
+      'addTasksToJob': 'Add tasks to this job to get started',
+      'updateStatus': 'Update Status',
+      'timeTracking': 'Time Tracking',
+      'timeHistory': 'Time History',
+      'noTimeEntries': 'No time entries recorded yet.',
+      'pause': 'Pause',
+      'start': 'Start',
+      'stop': 'Stop',
+      'addNote': 'Add Note',
+      'enterNoteHere': 'Enter your note here...',
+      'clear': 'Clear',
+      'notesTitle': 'Notes',
+      'noNotesYet': 'No notes added yet.',
+      'photos': 'Photos',
+      'capturePhoto': 'Capture Photo',
+      'noPhotosYet': 'No photos captured yet.',
+      'completionStatus': 'Completion Status',
+      'markAsCompleted': 'Mark as Completed',
+      'taskFinished': 'Task has been finished successfully',
+      'qualityCheck': 'Quality Check',
+      'allRequirementsMet': 'All requirements have been met',
+      'digitalSignOff': 'Digital Sign-off',
+      'customerSignature': 'Customer Signature',
+      'signaturePadPlaceholder': 'Signature Pad (Implementation needed)',
+      'taskNotFound': 'Task Not Found',
+      'taskNotFoundMessage': 'Task not found',
+      'errorLoadingTask': 'Error loading task',
+      'statusUpdated': 'Task status updated',
+      'priorityUpdated': 'Task priority updated',
       'low': 'Low',
       'medium': 'Medium',
       'high': 'High',
@@ -114,6 +152,7 @@ class AppLocalizations {
       'pending': 'Menunggu',
       'inProgress': 'Sedang Berjalan',
       'completed': 'Selesai',
+      'cancelled': 'Dibatalkan',
       'allTasks': 'Semua Tugas',
       'profile': 'Profil',
       'editProfile': 'Edit Profil',
@@ -140,6 +179,43 @@ class AppLocalizations {
       'dueDate': 'Tarikh Akhir',
       'location': 'Lokasi',
       'notes': 'Nota',
+      'detailsTab': 'Butiran',
+      'timeTrackingTab': 'Penjejakan Masa',
+      'notesPhotosTab': 'Nota & Foto',
+      'signOffTab': 'Tandatangan',
+      'jobTasks': 'Tugas Kerja',
+      'tasksForThisJob': 'Tugas untuk kerja ini',
+      'manageTasksEfficiently': 'Urus tugas anda dengan cekap',
+      'noTasksForJob': 'Tiada tugas untuk kerja ini',
+      'addTasksToJob': 'Tambah tugas untuk memulakan',
+      'updateStatus': 'Kemas Kini Status',
+      'timeTracking': 'Penjejakan Masa',
+      'timeHistory': 'Sejarah Masa',
+      'noTimeEntries': 'Tiada rekod masa lagi.',
+      'pause': 'Jeda',
+      'start': 'Mula',
+      'stop': 'Henti',
+      'addNote': 'Tambah Nota',
+      'enterNoteHere': 'Masukkan nota anda di sini...',
+      'clear': 'Kosongkan',
+      'notesTitle': 'Nota',
+      'noNotesYet': 'Belum ada nota.',
+      'photos': 'Foto',
+      'capturePhoto': 'Ambil Foto',
+      'noPhotosYet': 'Belum ada foto diambil.',
+      'completionStatus': 'Status Penyempurnaan',
+      'markAsCompleted': 'Tandakan sebagai Selesai',
+      'taskFinished': 'Tugas telah selesai',
+      'qualityCheck': 'Semakan Kualiti',
+      'allRequirementsMet': 'Semua keperluan telah dipenuhi',
+      'digitalSignOff': 'Tandatangan Digital',
+      'customerSignature': 'Tandatangan Pelanggan',
+      'signaturePadPlaceholder': 'Pad Tandatangan (Perlu dilaksana)',
+      'taskNotFound': 'Tugas Tidak Dijumpai',
+      'taskNotFoundMessage': 'Tugas tidak dijumpai',
+      'errorLoadingTask': 'Ralat memuat tugas',
+      'statusUpdated': 'Status tugas dikemas kini',
+      'priorityUpdated': 'Keutamaan tugas dikemas kini',
       'low': 'Rendah',
       'medium': 'Sederhana',
       'high': 'Tinggi',
@@ -182,6 +258,7 @@ class AppLocalizations {
       'pending': '待处理',
       'inProgress': '进行中',
       'completed': '已完成',
+      'cancelled': '已取消',
       'allTasks': '所有任务',
       'profile': '个人资料',
       'editProfile': '编辑个人资料',
@@ -208,6 +285,43 @@ class AppLocalizations {
       'dueDate': '截止日期',
       'location': '位置',
       'notes': '备注',
+      'detailsTab': '详情',
+      'timeTrackingTab': '时间跟踪',
+      'notesPhotosTab': '备注与照片',
+      'signOffTab': '签署',
+      'jobTasks': '工单任务',
+      'tasksForThisJob': '该工单的任务',
+      'manageTasksEfficiently': '高效管理您的任务',
+      'noTasksForJob': '该工单没有任务',
+      'addTasksToJob': '添加任务以开始',
+      'updateStatus': '更新状态',
+      'timeTracking': '时间跟踪',
+      'timeHistory': '时间记录',
+      'noTimeEntries': '尚无时间记录。',
+      'pause': '暂停',
+      'start': '开始',
+      'stop': '停止',
+      'addNote': '添加备注',
+      'enterNoteHere': '在此输入备注...',
+      'clear': '清空',
+      'notesTitle': '备注',
+      'noNotesYet': '尚未添加备注。',
+      'photos': '照片',
+      'capturePhoto': '拍照',
+      'noPhotosYet': '尚未拍摄照片。',
+      'completionStatus': '完成状态',
+      'markAsCompleted': '标记为完成',
+      'taskFinished': '任务已成功完成',
+      'qualityCheck': '质量检查',
+      'allRequirementsMet': '所有要求均已满足',
+      'digitalSignOff': '电子签署',
+      'customerSignature': '客户签名',
+      'signaturePadPlaceholder': '签名板（待实现）',
+      'taskNotFound': '未找到任务',
+      'taskNotFoundMessage': '未找到任务',
+      'errorLoadingTask': '加载任务出错',
+      'statusUpdated': '任务状态已更新',
+      'priorityUpdated': '任务优先级已更新',
       'low': '低',
       'medium': '中',
       'high': '高',
@@ -304,6 +418,44 @@ class AppLocalizations {
   String get errorOccurred => translate('errorOccurred');
   String get confirmDelete => translate('confirmDelete');
   String get confirmLogout => translate('confirmLogout');
+  // Newly added convenience getters
+  String get jobTasks => translate('jobTasks');
+  String get tasksForThisJob => translate('tasksForThisJob');
+  String get manageTasksEfficiently => translate('manageTasksEfficiently');
+  String get noTasksForJob => translate('noTasksForJob');
+  String get addTasksToJob => translate('addTasksToJob');
+  String get detailsTab => translate('detailsTab');
+  String get timeTrackingTab => translate('timeTrackingTab');
+  String get notesPhotosTab => translate('notesPhotosTab');
+  String get signOffTab => translate('signOffTab');
+  String get cancelled => translate('cancelled');
+  String get updateStatus => translate('updateStatus');
+  String get timeTracking => translate('timeTracking');
+  String get timeHistory => translate('timeHistory');
+  String get noTimeEntries => translate('noTimeEntries');
+  String get pause => translate('pause');
+  String get start => translate('start');
+  String get stop => translate('stop');
+  String get addNote => translate('addNote');
+  String get enterNoteHere => translate('enterNoteHere');
+  String get clear => translate('clear');
+  String get notesTitle => translate('notesTitle');
+  String get noNotesYet => translate('noNotesYet');
+  String get photos => translate('photos');
+  String get capturePhoto => translate('capturePhoto');
+  String get noPhotosYet => translate('noPhotosYet');
+  String get completionStatus => translate('completionStatus');
+  String get markAsCompleted => translate('markAsCompleted');
+  String get taskFinished => translate('taskFinished');
+  String get qualityCheck => translate('qualityCheck');
+  String get allRequirementsMet => translate('allRequirementsMet');
+  String get digitalSignOff => translate('digitalSignOff');
+  String get customerSignature => translate('customerSignature');
+  String get signaturePadPlaceholder => translate('signaturePadPlaceholder');
+  String get taskNotFound => translate('taskNotFound');
+  String get taskNotFoundMessage => translate('taskNotFoundMessage');
+  String get statusUpdated => translate('statusUpdated');
+  String get priorityUpdated => translate('priorityUpdated');
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

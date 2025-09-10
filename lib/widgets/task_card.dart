@@ -21,89 +21,105 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+    final theme = Theme.of(context);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 8),
-              _buildTitle(),
-              const SizedBox(height: 4),
-              _buildDescription(),
-              if (task.tags.isNotEmpty) ...[
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(theme),
+                const SizedBox(height: 12),
+                _buildTitle(theme),
                 const SizedBox(height: 8),
-                _buildTags(),
+                _buildDescription(theme),
+                if (task.tags.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  _buildTags(theme),
+                ],
+                const SizedBox(height: 16),
+                _buildFooter(theme),
               ],
-              const SizedBox(height: 12),
-              _buildFooter(),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ThemeData theme) {
     return Row(
       children: [
-        _buildPriorityIndicator(),
+        _buildPriorityIndicator(theme),
         const SizedBox(width: 8),
-        _buildStatusChip(),
+        _buildStatusChip(theme),
         const Spacer(),
         _buildActions(),
       ],
     );
   }
 
-  Widget _buildPriorityIndicator() {
+  Widget _buildPriorityIndicator(ThemeData theme) {
     Color color;
     IconData icon;
     
     switch (task.priority) {
       case TaskPriority.low:
-        color = Colors.green;
+        color = const Color(0xFF10B981);
         icon = Icons.keyboard_arrow_down;
         break;
       case TaskPriority.medium:
-        color = Colors.orange;
+        color = const Color(0xFFF59E0B);
         icon = Icons.remove;
         break;
       case TaskPriority.high:
-        color = Colors.red;
+        color = const Color(0xFFEF4444);
         icon = Icons.keyboard_arrow_up;
         break;
       case TaskPriority.urgent:
-        color = Colors.purple;
+        color = const Color(0xFF8B5CF6);
         icon = Icons.priority_high;
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
+          Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
           Text(
             task.priorityDisplayName,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
               color: color,
             ),
@@ -113,45 +129,45 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip() {
+  Widget _buildStatusChip(ThemeData theme) {
     Color color;
     IconData icon;
     
     switch (task.status) {
       case TaskStatus.pending:
-        color = Colors.grey;
+        color = const Color(0xFFF59E0B);
         icon = Icons.schedule;
         break;
       case TaskStatus.inProgress:
-        color = Colors.blue;
+        color = const Color(0xFF3B82F6);
         icon = Icons.play_circle_outline;
         break;
       case TaskStatus.completed:
-        color = Colors.green;
+        color = const Color(0xFF10B981);
         icon = Icons.check_circle_outline;
         break;
       case TaskStatus.cancelled:
-        color = Colors.red;
+        color = const Color(0xFFEF4444);
         icon = Icons.cancel_outlined;
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: color),
+          Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
           Text(
             task.statusDisplayName,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
               color: color,
             ),
@@ -214,7 +230,7 @@ class TaskCard extends StatelessWidget {
           value: 'status_pending',
           child: Row(
             children: [
-              Icon(Icons.schedule, size: 20, color: Colors.grey),
+              Icon(Icons.schedule, size: 20, color: Color(0xFFF59E0B)),
               SizedBox(width: 8),
               Text('Mark as Pending'),
             ],
@@ -224,7 +240,7 @@ class TaskCard extends StatelessWidget {
           value: 'status_in_progress',
           child: Row(
             children: [
-              Icon(Icons.play_circle_outline, size: 20, color: Colors.blue),
+              Icon(Icons.play_circle_outline, size: 20, color: Color(0xFF3B82F6)),
               SizedBox(width: 8),
               Text('Mark as In Progress'),
             ],
@@ -234,7 +250,7 @@ class TaskCard extends StatelessWidget {
           value: 'status_completed',
           child: Row(
             children: [
-              Icon(Icons.check_circle_outline, size: 20, color: Colors.green),
+              Icon(Icons.check_circle_outline, size: 20, color: Color(0xFF10B981)),
               SizedBox(width: 8),
               Text('Mark as Completed'),
             ],
@@ -244,7 +260,7 @@ class TaskCard extends StatelessWidget {
           value: 'status_cancelled',
           child: Row(
             children: [
-              Icon(Icons.cancel_outlined, size: 20, color: Colors.red),
+              Icon(Icons.cancel_outlined, size: 20, color: Color(0xFFEF4444)),
               SizedBox(width: 8),
               Text('Mark as Cancelled'),
             ],
@@ -306,89 +322,90 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildTitle(ThemeData theme) {
     return Text(
       task.title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: Colors.black87,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        color: theme.colorScheme.onSurface,
+        letterSpacing: -0.5,
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(ThemeData theme) {
     return Text(
       task.description,
       style: TextStyle(
         fontSize: 14,
-        color: Colors.grey[600],
-        height: 1.3,
+        color: theme.colorScheme.onSurface.withOpacity(0.7),
+        height: 1.4,
       ),
       maxLines: 3,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildTags() {
+  Widget _buildTags(ThemeData theme) {
     return Wrap(
-      spacing: 6,
-      runSpacing: 4,
+      spacing: 8,
+      runSpacing: 6,
       children: task.tags.map((tag) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue.withOpacity(0.3)),
+          color: theme.colorScheme.primary.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
         ),
         child: Text(
           tag,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
-            color: Colors.blue,
-            fontWeight: FontWeight.w500,
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.w600,
           ),
         ),
       )).toList(),
     );
   }
 
-  Widget _buildFooter() {
+  Widget _buildFooter(ThemeData theme) {
     return Row(
       children: [
-        _buildCategoryChip(),
+        _buildCategoryChip(theme),
         const Spacer(),
-        if (task.dueDate != null) _buildDueDate(),
+        if (task.dueDate != null) _buildDueDate(theme),
         if (task.estimatedDurationMinutes > 0) ...[
           const SizedBox(width: 12),
-          _buildDuration(),
+          _buildDuration(theme),
         ],
       ],
     );
   }
 
-  Widget _buildCategoryChip() {
+  Widget _buildCategoryChip(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        color: theme.colorScheme.surfaceContainerLow.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
       ),
       child: Text(
         task.categoryDisplayName,
         style: TextStyle(
           fontSize: 12,
-          color: Colors.grey[700],
-          fontWeight: FontWeight.w500,
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
 
-  Widget _buildDueDate() {
+  Widget _buildDueDate(ThemeData theme) {
     final isOverdue = task.isOverdue;
     final isDueToday = task.isDueToday;
     
@@ -396,21 +413,21 @@ class TaskCard extends StatelessWidget {
     String text;
     
     if (isOverdue) {
-      color = Colors.red;
+      color = const Color(0xFFEF4444);
       text = 'Overdue';
     } else if (isDueToday) {
-      color = Colors.orange;
+      color = const Color(0xFFF59E0B);
       text = 'Due Today';
     } else {
-      color = Colors.grey;
+      color = const Color(0xFF64748B);
       text = 'Due ${_formatDate(task.dueDate!)}';
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Row(
@@ -423,7 +440,7 @@ class TaskCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               color: color,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -431,25 +448,25 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDuration() {
+  Widget _buildDuration(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue.withOpacity(0.3)),
+        color: theme.colorScheme.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.timer, size: 14, color: Colors.blue),
+          Icon(Icons.timer, size: 14, color: theme.colorScheme.primary),
           const SizedBox(width: 4),
           Text(
             task.formattedEstimatedDuration,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: Colors.blue,
-              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
