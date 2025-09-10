@@ -32,6 +32,9 @@ class Job {
   final List<ServiceRecord> serviceHistory;
   final List<JobNote> notes;
   String? customerSignature;
+  String? customerSignatureImageData; // Base64 encoded image data
+  DateTime? signatureDate;
+  String? signatureBy; // Who signed (customer name)
   bool isSignedOff;
   JobStatus status;
   final DateTime createdAt;
@@ -49,6 +52,9 @@ class Job {
     required this.serviceHistory,
     this.notes = const [],
     this.customerSignature,
+    this.customerSignatureImageData,
+    this.signatureDate,
+    this.signatureBy,
     this.isSignedOff = false,
     required this.status,
     required this.createdAt,

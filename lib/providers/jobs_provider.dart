@@ -120,6 +120,40 @@ class JobsProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateCustomerSignatureWithImage(String jobId, String signatureId, String imageData, String signedBy) async {
+    try {
+      // Update local state
+      final jobIndex = _jobs.indexWhere((job) => job.id == jobId);
+      if (jobIndex != -1) {
+        _jobs[jobIndex].customerSignature = signatureId;
+        _jobs[jobIndex].customerSignatureImageData = imageData;
+        _jobs[jobIndex].signatureDate = DateTime.now();
+        _jobs[jobIndex].signatureBy = signedBy;
+        _jobs[jobIndex].isSignedOff = true;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error updating customer signature with image: $e');
+    }
+  }
+
+  Future<void> clearCustomerSignature(String jobId) async {
+    try {
+      // Update local state
+      final jobIndex = _jobs.indexWhere((job) => job.id == jobId);
+      if (jobIndex != -1) {
+        _jobs[jobIndex].customerSignature = null;
+        _jobs[jobIndex].customerSignatureImageData = null;
+        _jobs[jobIndex].signatureDate = null;
+        _jobs[jobIndex].signatureBy = null;
+        _jobs[jobIndex].isSignedOff = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Error clearing customer signature: $e');
+    }
+  }
+
   Future<void> refreshJobs() async {
     await loadJobs();
   }
