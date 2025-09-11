@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
+import '../l10n/app_localizations.dart';
 
 class PreferencesWidget extends StatefulWidget {
   final Map<String, dynamic> preferences;
@@ -54,8 +55,8 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Preferences',
+                  Text(
+                    AppLocalizations.of(context).preferencesTitle,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -64,7 +65,9 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                 ],
               ),
               const SizedBox(height: 16),
-              ...widget.preferences.entries.map((entry) => _buildPreferenceRow(entry.key, entry.value)),
+              ...widget.preferences.entries
+                  .where((entry) => entry.key != 'darkMode' && entry.key != 'language')
+                  .map((entry) => _buildPreferenceRow(entry.key, entry.value)),
             ],
           ),
         ),
@@ -73,7 +76,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
   }
 
   Widget _buildPreferenceRow(String key, dynamic value) {
-    String displayName = _getDisplayName(key);
+    String displayName = _getDisplayName(context, key);
     IconData icon = _getIcon(key);
 
     return Padding(
@@ -172,16 +175,16 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
     }
   }
 
-  String _getDisplayName(String key) {
+  String _getDisplayName(BuildContext context, String key) {
     switch (key) {
       case 'notifications':
-        return 'Push Notifications';
+        return AppLocalizations.of(context).notifications;
       case 'darkMode':
-        return 'Dark Mode';
+        return AppLocalizations.of(context).darkMode;
       case 'language':
-        return 'Language';
+        return AppLocalizations.of(context).language;
       case 'autoSave':
-        return 'Auto Save';
+        return AppLocalizations.of(context).autoSave;
       default:
         return key.replaceAll(RegExp(r'([A-Z])'), ' \$1').trim();
     }

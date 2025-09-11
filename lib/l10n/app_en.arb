@@ -259,7 +259,108 @@
   "statusUpdated": "Task status updated",
   "@statusUpdated": {"description": "Generic status updated message"},
   "priorityUpdated": "Task priority updated",
-  "@priorityUpdated": {"description": "Generic priority updated message"}
+  "@priorityUpdated": {"description": "Generic priority updated message"},
+  "statusUpdatedTo": "Task status updated to {status}",
+  "@statusUpdatedTo": {
+    "description": "Status updated message with status name",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "priorityUpdatedTo": "Task priority updated to {priority}",
+  "@priorityUpdatedTo": {
+    "description": "Priority updated message with priority name",
+    "placeholders": {
+      "priority": {
+        "type": "String"
+      }
+    }
+  },
+  "overdue": "Overdue",
+  "@overdue": {"description": "Overdue status"},
+  "dueToday": "Due Today",
+  "@dueToday": {"description": "Due today status"},
+  "today": "Today",
+  "@today": {"description": "Today"},
+  "tomorrow": "Tomorrow",
+  "@tomorrow": {"description": "Tomorrow"},
+  "yesterday": "Yesterday",
+  "@yesterday": {"description": "Yesterday"},
+  "inDays": "in {days} days",
+  "@inDays": {
+    "description": "Due in X days",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "description": "X days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "markAsCompleted": "Mark as Completed",
+  "@markAsCompleted": {"description": "Mark as completed button text"},
+  "taskCompletedSuccessfully": "Task has been completed successfully",
+  "@taskCompletedSuccessfully": {"description": "Task completion success message"},
+  "readyToMarkCompleted": "Ready to mark as completed",
+  "@readyToMarkCompleted": {"description": "Ready to complete message"},
+  "completeQualityCheckAndSignatureFirst": "Complete quality check and signature first",
+  "@completeQualityCheckAndSignatureFirst": {"description": "Requirement message for completion"},
+  "completeQualityCheckAndCustomerSignature": "Complete quality check and customer signature to enable task completion",
+  "@completeQualityCheckAndCustomerSignature": {"description": "Warning message for completion requirements"},
+  "progress": "Progress",
+  "@progress": {"description": "Progress label"},
+  "items": "items",
+  "@items": {"description": "Items label"},
+  "verified": "VERIFIED",
+  "@verified": {"description": "Verified status"},
+  "qualityCheckNotesOptional": "Quality Check Notes (Optional)",
+  "@qualityCheckNotesOptional": {"description": "Quality check notes label"},
+  "addAdditionalNotes": "Add any additional notes or observations...",
+  "@addAdditionalNotes": {"description": "Quality check notes hint"},
+  "completeAllItemsFirst": "Complete All Items First ({completed}/{total})",
+  "@completeAllItemsFirst": {
+    "description": "Complete all items first message",
+    "placeholders": {
+      "completed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "reset": "Reset",
+  "@reset": {"description": "Reset button"},
+  "details": "Details",
+  "@details": {"description": "Details button"},
+  "completedItems": "Completed Items:",
+  "@completedItems": {"description": "Completed items label"},
+  "workCompleted": "Work Completed",
+  "@workCompleted": {"description": "Work completed quality check item"},
+  "workCompletedDescription": "All assigned work has been completed according to specifications",
+  "@workCompletedDescription": {"description": "Work completed description"},
+  "safetyStandardsMet": "Safety Standards Met",
+  "@safetyStandardsMet": {"description": "Safety standards quality check item"},
+  "safetyStandardsDescription": "All safety protocols and standards have been followed",
+  "@safetyStandardsDescription": {"description": "Safety standards description"},
+  "equipmentTested": "Equipment Tested",
+  "@equipmentTested": {"description": "Equipment tested quality check item"},
+  "equipmentTestedDescription": "All equipment has been tested and is functioning properly",
+  "@equipmentTestedDescription": {"description": "Equipment tested description"},
+  "documentationComplete": "Documentation Complete",
+  "@documentationComplete": {"description": "Documentation complete quality check item"},
+  "documentationCompleteDescription": "All required documentation has been completed and filed",
+  "@documentationCompleteDescription": {"description": "Documentation complete description"},
+  "customerSatisfied": "Customer Satisfied",
+  "@customerSatisfied": {"description": "Customer satisfied quality check item"},
+  "customerSatisfiedDescription": "Customer has confirmed satisfaction with the completed work",
+  "@customerSatisfiedDescription": {"description": "Customer satisfied description"},
   
   "low": "Low",
   "@low": {

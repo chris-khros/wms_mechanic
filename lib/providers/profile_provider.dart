@@ -10,6 +10,7 @@ class ProfileProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   AuthProvider? _authProvider;
+  VoidCallback? _authListener;
 
   UserProfile? get userProfile => _userProfile;
   bool get isLoading => _isLoading;
@@ -24,7 +25,18 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void setAuthProvider(AuthProvider authProvider) {
+    // Detach previous listener if any
+    if (_authProvider != null && _authListener != null) {
+      _authProvider!.removeListener(_authListener!);
+    }
+
     _authProvider = authProvider;
+
+    // Set up a listener so we react whenever auth state changes (login/logout)
+    _authListener = _onAuthChanged;
+    _authProvider!.addListener(_authListener!);
+
+    // Try to sync immediately with the current auth state
     _syncWithAuthProvider();
   }
 
@@ -99,6 +111,15 @@ class ProfileProvider with ChangeNotifier {
         },
       );
       await _saveProfile();
+    }
+  }
+
+  void _onAuthChanged() {
+    // When auth changes, rebuild profile from current mechanic or clear it on logout
+    if (_authProvider?.isAuthenticated == true && _authProvider?.currentMechanic != null) {
+      _createProfileFromAuth();
+    } else {
+      resetProfile();
     }
   }
 
@@ -285,5 +306,13 @@ class ProfileProvider with ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  @override
+  void dispose() {
+    if (_authProvider != null && _authListener != null) {
+      _authProvider!.removeListener(_authListener!);
+    }
+    super.dispose();
   }
 } 

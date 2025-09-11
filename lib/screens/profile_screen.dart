@@ -7,6 +7,7 @@ import '../widgets/profile_info_card.dart';
 import '../widgets/skills_widget.dart';
 import '../widgets/preferences_widget.dart';
 import '../database/database_helper.dart';
+import '../l10n/app_localizations.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
         if (!authProvider.isAuthenticated) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Profile'),
+              title: Text(AppLocalizations.of(context).profile),
               backgroundColor: Colors.transparent,
               elevation: 0,
             ),
@@ -37,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Please log in to view your profile',
+                    AppLocalizations.of(context).pleaseLoginToViewProfile,
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[600],
@@ -50,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                       Navigator.of(context).pushReplacementNamed('/login');
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Go to Login'),
+                    label: Text(AppLocalizations.of(context).goToLogin),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF667eea),
                       foregroundColor: Colors.white,
@@ -65,57 +66,45 @@ class ProfileScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Profile'),
+            title: Text(AppLocalizations.of(context).profile),
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 },
-                tooltip: 'Edit Profile',
+                tooltip: AppLocalizations.of(context).editProfile,
               ),
-              PopupMenuButton<String>(
-                onSelected: (value) async {
-                  if (value == 'logout') {
-                    final shouldLogout = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Logout'),
-                        content: const Text('Are you sure you want to logout?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            style: TextButton.styleFrom(foregroundColor: Colors.red),
-                            child: const Text('Logout'),
-                          ),
-                        ],
-                      ),
-                    );
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: AppLocalizations.of(context).logout,
+                onPressed: () async {
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(AppLocalizations.of(context).logout),
+                      content: Text(AppLocalizations.of(context).confirmLogout),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(AppLocalizations.of(context).cancel),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(foregroundColor: Colors.red),
+                          child: Text(AppLocalizations.of(context).logout),
+                        ),
+                      ],
+                    ),
+                  );
 
-                    if (shouldLogout == true && context.mounted) {
-                      await authProvider.logout();
-                      if (context.mounted) {
-                        Navigator.of(context).pushReplacementNamed('/login');
-                      }
+                  if (shouldLogout == true && context.mounted) {
+                    await authProvider.logout();
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacementNamed('/login');
                     }
                   }
                 },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout, color: Colors.red),
-                        SizedBox(width: 8),
-                        Text('Logout', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
@@ -142,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                         onPressed: () {
                           profileProvider.clearError();
                         },
-                        child: const Text('Retry'),
+                        child: Text(AppLocalizations.of(context).retry),
                       ),
                     ],
                   ),
@@ -158,9 +147,12 @@ class ProfileScreen extends StatelessWidget {
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 900),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                     // Profile Picture Section
                     Center(
                       child: ProfilePictureWidget(
@@ -172,17 +164,17 @@ class ProfileScreen extends StatelessWidget {
 
                     // Basic Information
                     ProfileInfoCard(
-                      title: 'Basic Information',
+                      title: AppLocalizations.of(context).basicInformation,
                       icon: Icons.person,
                       children: [
-                        _buildInfoRow('Name', userProfile.name),
-                        _buildInfoRow('Email', userProfile.email),
+                        _buildInfoRow(AppLocalizations.of(context).name, userProfile.name),
+                        _buildInfoRow(AppLocalizations.of(context).email, userProfile.email),
                         if (userProfile.phoneNumber != null)
-                          _buildInfoRow('Phone', userProfile.phoneNumber!),
+                          _buildInfoRow(AppLocalizations.of(context).phone, userProfile.phoneNumber!),
                         if (userProfile.address != null)
-                          _buildInfoRow('Address', userProfile.address!),
+                          _buildInfoRow(AppLocalizations.of(context).address, userProfile.address!),
                         if (userProfile.dateOfBirth != null)
-                          _buildInfoRow('Date of Birth', 
+                          _buildInfoRow(AppLocalizations.of(context).dateOfBirth, 
                             '${userProfile.dateOfBirth!.day}/${userProfile.dateOfBirth!.month}/${userProfile.dateOfBirth!.year}'),
                       ],
                     ),
@@ -190,17 +182,17 @@ class ProfileScreen extends StatelessWidget {
 
                     // Professional Information
                     ProfileInfoCard(
-                      title: 'Professional Information',
+                      title: AppLocalizations.of(context).professionalInformation,
                       icon: Icons.work,
                       children: [
                         if (userProfile.employeeId != null)
-                          _buildInfoRow('Employee ID', userProfile.employeeId!),
+                          _buildInfoRow(AppLocalizations.of(context).employeeId, userProfile.employeeId!),
                         if (userProfile.department != null)
-                          _buildInfoRow('Department', userProfile.department!),
+                          _buildInfoRow(AppLocalizations.of(context).department, userProfile.department!),
                         if (userProfile.position != null)
-                          _buildInfoRow('Position', userProfile.position!),
+                          _buildInfoRow(AppLocalizations.of(context).position, userProfile.position!),
                         if (userProfile.hireDate != null)
-                          _buildInfoRow('Hire Date', 
+                          _buildInfoRow(AppLocalizations.of(context).hireDate, 
                             '${userProfile.hireDate!.day}/${userProfile.hireDate!.month}/${userProfile.hireDate!.year}'),
                       ],
                     ),
@@ -224,7 +216,7 @@ class ProfileScreen extends StatelessWidget {
                               Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                             },
                             icon: const Icon(Icons.edit),
-                            label: const Text('Edit Profile'),
+                            label: Text(AppLocalizations.of(context).editProfile),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                             ),
@@ -233,7 +225,7 @@ class ProfileScreen extends StatelessWidget {
                           TextButton.icon(
                             onPressed: () => _showResetDialog(context, profileProvider),
                             icon: const Icon(Icons.refresh),
-                            label: const Text('Reset Profile'),
+                            label: Text(AppLocalizations.of(context).resetProfile),
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.red,
                             ),
@@ -242,7 +234,7 @@ class ProfileScreen extends StatelessWidget {
                           TextButton.icon(
                             onPressed: () => _showDatabaseResetDialog(context),
                             icon: const Icon(Icons.storage),
-                            label: const Text('Reset Database'),
+                            label: Text(AppLocalizations.of(context).resetDatabase),
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.orange,
                             ),
@@ -250,7 +242,9 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ],
+                      ],
+                    ),
+                  ),
                 ),
               );
             },

@@ -132,6 +132,59 @@ class AppLocalizations {
       'errorOccurred': 'An error occurred',
       'confirmDelete': 'Are you sure you want to delete this item?',
       'confirmLogout': 'Are you sure you want to logout?',
+      // Profile & common
+      'pleaseLoginToViewProfile': 'Please log in to view your profile',
+      'goToLogin': 'Go to Login',
+      'basicInformation': 'Basic Information',
+      'professionalInformation': 'Professional Information',
+      'name': 'Name',
+      'phone': 'Phone',
+      'address': 'Address',
+      'dateOfBirth': 'Date of Birth',
+      'employeeId': 'Employee ID',
+      'department': 'Department',
+      'position': 'Position',
+      'hireDate': 'Hire Date',
+      'preferencesTitle': 'Preferences',
+      'notifications': 'Push Notifications',
+      'autoSave': 'Auto Save',
+      'chooseFromGallery': 'Choose from Gallery',
+      'takePhoto': 'Take Photo',
+      'removePhoto': 'Remove Photo',
+      'resetProfile': 'Reset Profile',
+      'resetProfileConfirm': 'Are you sure you want to reset your profile? This action cannot be undone.',
+      'retry': 'Retry',
+      'resetDatabase': 'Reset Database',
+      'resetDatabaseDesc': 'This will recreate the database with the latest schema. All data will be lost and replaced with sample data. Use this if you encounter database errors.',
+      'databaseResetSuccess': 'Database reset successfully!',
+      'databaseResetFailed': 'Database reset failed',
+      // Tasks
+      'editTaskPlaceholder': 'Edit task functionality would be implemented here',
+      'taskStatusUpdatedTo': 'Task status updated to',
+      'taskPriorityUpdatedTo': 'Task priority updated to',
+      'deleteTask': 'Delete Task',
+      // Task details labels
+      'estimatedDuration': 'Estimated Duration',
+      'tags': 'Tags',
+      'running': 'Running',
+      'stopped': 'Stopped',
+      'currentSession': 'Current Session',
+      'totalTime': 'Total Time',
+      'entries': 'Entries',
+      'addManualEntry': 'Add Manual Entry',
+      'noTimeEntriesYet': 'No time entries yet',
+      'startTrackingOrAddManual': 'Start tracking time or add manual entries',
+      'confirmedPhotos': 'Confirmed Photos',
+      'pendingPhotos': 'Pending Photos',
+      'confirmPhotos': 'Confirm Photos',
+      'photoCapturedHint': 'Photo captured! Tap "Confirm Photos" to save.',
+      'photoSelectedHint': 'Photo selected! Tap "Confirm Photos" to save.',
+      'tapConfirmPhotosToSave': 'Tap "Confirm Photos" to save',
+      'photosConfirmedSaved': 'Photos confirmed and saved successfully!',
+      'qualityCheckNotesOptional': 'Quality Check Notes (Optional)',
+      'completeQualityCheck': 'Complete Quality Check',
+      'detailsButton': 'Details',
+      'startTimeLabel': 'Start Time (HH:MM)',
     },
     'ms': {
       'appTitle': 'WMS Mekanik',
@@ -238,6 +291,59 @@ class AppLocalizations {
       'errorOccurred': 'Ralat telah berlaku',
       'confirmDelete': 'Adakah anda pasti mahu memadam item ini?',
       'confirmLogout': 'Adakah anda pasti mahu log keluar?',
+      // Profile & common
+      'pleaseLoginToViewProfile': 'Sila log masuk untuk melihat profil anda',
+      'goToLogin': 'Pergi ke Log Masuk',
+      'basicInformation': 'Maklumat Asas',
+      'professionalInformation': 'Maklumat Profesional',
+      'name': 'Nama',
+      'phone': 'Telefon',
+      'address': 'Alamat',
+      'dateOfBirth': 'Tarikh Lahir',
+      'employeeId': 'ID Pekerja',
+      'department': 'Jabatan',
+      'position': 'Jawatan',
+      'hireDate': 'Tarikh Mula',
+      'preferencesTitle': 'Keutamaan',
+      'notifications': 'Pemberitahuan Tolak',
+      'autoSave': 'Simpan Automatik',
+      'chooseFromGallery': 'Pilih dari Galeri',
+      'takePhoto': 'Ambil Foto',
+      'removePhoto': 'Buang Foto',
+      'resetProfile': 'Tetapkan Semula Profil',
+      'resetProfileConfirm': 'Adakah anda pasti mahu menetapkan semula profil anda? Tindakan ini tidak boleh dibatalkan.',
+      'retry': 'Cuba Lagi',
+      'resetDatabase': 'Tetapkan Semula Pangkalan Data',
+      'resetDatabaseDesc': 'Ini akan mencipta semula pangkalan data dengan skema terkini. Semua data akan hilang dan diganti dengan data sampel. Gunakan ini jika anda menghadapi ralat pangkalan data.',
+      'databaseResetSuccess': 'Pangkalan data berjaya ditetapkan semula!',
+      'databaseResetFailed': 'Tetapan semula pangkalan data gagal',
+      // Tasks
+      'editTaskPlaceholder': 'Fungsi sunting tugas akan dilaksanakan di sini',
+      'taskStatusUpdatedTo': 'Status tugas dikemas kini kepada',
+      'taskPriorityUpdatedTo': 'Keutamaan tugas dikemas kini kepada',
+      'deleteTask': 'Padam Tugas',
+      // Task details labels
+      'estimatedDuration': 'Anggaran Tempoh',
+      'tags': 'Tanda',
+      'running': 'Berjalan',
+      'stopped': 'Dihenti',
+      'currentSession': 'Sesi Semasa',
+      'totalTime': 'Jumlah Masa',
+      'entries': 'Catatan',
+      'addManualEntry': 'Tambah Catatan Manual',
+      'noTimeEntriesYet': 'Belum ada rekod masa',
+      'startTrackingOrAddManual': 'Mula jejaki masa atau tambah catatan manual',
+      'confirmedPhotos': 'Foto Disahkan',
+      'pendingPhotos': 'Foto Belum Disahkan',
+      'confirmPhotos': 'Sahkan Foto',
+      'photoCapturedHint': 'Foto diambil! Ketik "Sahkan Foto" untuk menyimpan.',
+      'photoSelectedHint': 'Foto dipilih! Ketik "Sahkan Foto" untuk menyimpan.',
+      'tapConfirmPhotosToSave': 'Ketik "Sahkan Foto" untuk menyimpan',
+      'photosConfirmedSaved': 'Foto berjaya disahkan dan disimpan!',
+      'qualityCheckNotesOptional': 'Catatan Semakan Kualiti (Pilihan)',
+      'completeQualityCheck': 'Lengkapkan Semakan Kualiti',
+      'detailsButton': 'Butiran',
+      'startTimeLabel': 'Masa Mula (JJ:MM)',
     },
     'zh': {
       'appTitle': 'WMS 机械师',
@@ -344,6 +450,59 @@ class AppLocalizations {
       'errorOccurred': '发生错误',
       'confirmDelete': '您确定要删除此项目吗？',
       'confirmLogout': '您确定要退出登录吗？',
+      // Profile & common
+      'pleaseLoginToViewProfile': '请登录以查看您的个人资料',
+      'goToLogin': '前往登录',
+      'basicInformation': '基本信息',
+      'professionalInformation': '职业信息',
+      'name': '姓名',
+      'phone': '电话',
+      'address': '地址',
+      'dateOfBirth': '出生日期',
+      'employeeId': '员工编号',
+      'department': '部门',
+      'position': '职位',
+      'hireDate': '入职日期',
+      'preferencesTitle': '偏好设置',
+      'notifications': '推送通知',
+      'autoSave': '自动保存',
+      'chooseFromGallery': '从相册选择',
+      'takePhoto': '拍照',
+      'removePhoto': '删除照片',
+      'resetProfile': '重置个人资料',
+      'resetProfileConfirm': '确定要重置您的个人资料吗？此操作无法撤销。',
+      'retry': '重试',
+      'resetDatabase': '重置数据库',
+      'resetDatabaseDesc': '这将使用最新的结构重新创建数据库。所有数据将丢失并替换为示例数据。遇到数据库错误时使用。',
+      'databaseResetSuccess': '数据库重置成功！',
+      'databaseResetFailed': '数据库重置失败',
+      // Tasks
+      'editTaskPlaceholder': '此处将实现编辑任务功能',
+      'taskStatusUpdatedTo': '任务状态更新为',
+      'taskPriorityUpdatedTo': '任务优先级更新为',
+      'deleteTask': '删除任务',
+      // Task details labels
+      'estimatedDuration': '预计时长',
+      'tags': '标签',
+      'running': '进行中',
+      'stopped': '已停止',
+      'currentSession': '当前会话',
+      'totalTime': '总时长',
+      'entries': '条目',
+      'addManualEntry': '添加手动记录',
+      'noTimeEntriesYet': '尚无时间记录',
+      'startTrackingOrAddManual': '开始计时或添加手动记录',
+      'confirmedPhotos': '已确认照片',
+      'pendingPhotos': '待确认照片',
+      'confirmPhotos': '确认照片',
+      'photoCapturedHint': '已拍照！点击“确认照片”以保存。',
+      'photoSelectedHint': '已选择照片！点击“确认照片”以保存。',
+      'tapConfirmPhotosToSave': '点击“确认照片”以保存',
+      'photosConfirmedSaved': '照片已确认并成功保存！',
+      'qualityCheckNotesOptional': '质量检查备注（可选）',
+      'completeQualityCheck': '完成质量检查',
+      'detailsButton': '详情',
+      'startTimeLabel': '开始时间（HH:MM）',
     },
   };
   
@@ -418,6 +577,35 @@ class AppLocalizations {
   String get errorOccurred => translate('errorOccurred');
   String get confirmDelete => translate('confirmDelete');
   String get confirmLogout => translate('confirmLogout');
+  String get pleaseLoginToViewProfile => translate('pleaseLoginToViewProfile');
+  String get goToLogin => translate('goToLogin');
+  String get basicInformation => translate('basicInformation');
+  String get professionalInformation => translate('professionalInformation');
+  String get name => translate('name');
+  String get phone => translate('phone');
+  String get address => translate('address');
+  String get dateOfBirth => translate('dateOfBirth');
+  String get employeeId => translate('employeeId');
+  String get department => translate('department');
+  String get position => translate('position');
+  String get hireDate => translate('hireDate');
+  String get preferencesTitle => translate('preferencesTitle');
+  String get notifications => translate('notifications');
+  String get autoSave => translate('autoSave');
+  String get chooseFromGallery => translate('chooseFromGallery');
+  String get takePhoto => translate('takePhoto');
+  String get removePhoto => translate('removePhoto');
+  String get resetProfile => translate('resetProfile');
+  String get resetProfileConfirm => translate('resetProfileConfirm');
+  String get retry => translate('retry');
+  String get resetDatabase => translate('resetDatabase');
+  String get resetDatabaseDesc => translate('resetDatabaseDesc');
+  String get databaseResetSuccess => translate('databaseResetSuccess');
+  String get databaseResetFailed => translate('databaseResetFailed');
+  String get editTaskPlaceholder => translate('editTaskPlaceholder');
+  String get taskStatusUpdatedTo => translate('taskStatusUpdatedTo');
+  String get taskPriorityUpdatedTo => translate('taskPriorityUpdatedTo');
+  String get deleteTask => translate('deleteTask');
   // Newly added convenience getters
   String get jobTasks => translate('jobTasks');
   String get tasksForThisJob => translate('tasksForThisJob');
@@ -456,6 +644,28 @@ class AppLocalizations {
   String get taskNotFoundMessage => translate('taskNotFoundMessage');
   String get statusUpdated => translate('statusUpdated');
   String get priorityUpdated => translate('priorityUpdated');
+  // Task details extras
+  String get estimatedDuration => translate('estimatedDuration');
+  String get tags => translate('tags');
+  String get running => translate('running');
+  String get stopped => translate('stopped');
+  String get currentSession => translate('currentSession');
+  String get totalTime => translate('totalTime');
+  String get entries => translate('entries');
+  String get addManualEntry => translate('addManualEntry');
+  String get noTimeEntriesYet => translate('noTimeEntriesYet');
+  String get startTrackingOrAddManual => translate('startTrackingOrAddManual');
+  String get confirmedPhotos => translate('confirmedPhotos');
+  String get pendingPhotos => translate('pendingPhotos');
+  String get confirmPhotos => translate('confirmPhotos');
+  String get photoCapturedHint => translate('photoCapturedHint');
+  String get photoSelectedHint => translate('photoSelectedHint');
+  String get tapConfirmPhotosToSave => translate('tapConfirmPhotosToSave');
+  String get photosConfirmedSaved => translate('photosConfirmedSaved');
+  String get qualityCheckNotesOptional => translate('qualityCheckNotesOptional');
+  String get completeQualityCheck => translate('completeQualityCheck');
+  String get detailsButton => translate('detailsButton');
+  String get startTimeLabel => translate('startTimeLabel');
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

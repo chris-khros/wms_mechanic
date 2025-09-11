@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
+
 enum TaskPriority {
   low,
   medium,
@@ -163,48 +166,51 @@ class Task {
     return today.year == due.year && today.month == due.month && today.day == due.day;
   }
 
-  String get priorityDisplayName {
+  String getPriorityDisplayName(BuildContext context) {
+    final t = AppLocalizations.of(context);
     switch (priority) {
       case TaskPriority.low:
-        return 'Low';
+        return t.low;
       case TaskPriority.medium:
-        return 'Medium';
+        return t.medium;
       case TaskPriority.high:
-        return 'High';
+        return t.high;
       case TaskPriority.urgent:
-        return 'Urgent';
+        return t.urgent;
     }
   }
 
-  String get statusDisplayName {
+  String getStatusDisplayName(BuildContext context) {
+    final t = AppLocalizations.of(context);
     switch (status) {
       case TaskStatus.pending:
-        return 'Pending';
+        return t.pending;
       case TaskStatus.inProgress:
-        return 'In Progress';
+        return t.inProgress;
       case TaskStatus.completed:
-        return 'Completed';
+        return t.completed;
       case TaskStatus.cancelled:
-        return 'Cancelled';
+        return t.cancelled;
     }
   }
 
-  String get categoryDisplayName {
+  String getCategoryDisplayName(BuildContext context) {
+    final t = AppLocalizations.of(context);
     switch (category) {
       case TaskCategory.maintenance:
-        return 'Maintenance';
+        return t.maintenance;
       case TaskCategory.repair:
-        return 'Repair';
+        return t.repair;
       case TaskCategory.inspection:
-        return 'Inspection';
+        return t.inspection;
       case TaskCategory.diagnostic:
-        return 'Diagnostic';
+        return t.diagnostic;
       case TaskCategory.customerService:
-        return 'Customer Service';
+        return t.customerService;
       case TaskCategory.administrative:
-        return 'Administrative';
+        return t.administrative;
       case TaskCategory.other:
-        return 'Other';
+        return t.other;
     }
   }
 

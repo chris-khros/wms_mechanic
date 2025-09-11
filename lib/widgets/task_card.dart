@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../models/task.dart';
 
 class TaskCard extends StatelessWidget {
@@ -50,7 +51,7 @@ class TaskCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(theme),
+                _buildHeader(context, theme),
                 const SizedBox(height: 12),
                 _buildTitle(theme),
                 const SizedBox(height: 8),
@@ -60,7 +61,7 @@ class TaskCard extends StatelessWidget {
                   _buildTags(theme),
                 ],
                 const SizedBox(height: 16),
-                _buildFooter(theme),
+                _buildFooter(context, theme),
               ],
             ),
           ),
@@ -69,19 +70,23 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(BuildContext context, ThemeData theme) {
     return Row(
       children: [
-        _buildPriorityIndicator(theme),
+        Flexible(
+          child: _buildPriorityIndicator(context, theme),
+        ),
         const SizedBox(width: 8),
-        _buildStatusChip(theme),
+        Flexible(
+          child: _buildStatusChip(context, theme),
+        ),
         const Spacer(),
-        _buildActions(),
+        _buildActions(context),
       ],
     );
   }
 
-  Widget _buildPriorityIndicator(ThemeData theme) {
+  Widget _buildPriorityIndicator(BuildContext context, ThemeData theme) {
     Color color;
     IconData icon;
     
@@ -116,12 +121,15 @@ class TaskCard extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
-          Text(
-            task.priorityDisplayName,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
+          Flexible(
+            child: Text(
+              task.getPriorityDisplayName(context),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -129,7 +137,7 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(ThemeData theme) {
+  Widget _buildStatusChip(BuildContext context, ThemeData theme) {
     Color color;
     IconData icon;
     
@@ -164,12 +172,15 @@ class TaskCard extends StatelessWidget {
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
-          Text(
-            task.statusDisplayName,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: color,
+          Flexible(
+            child: Text(
+              task.getStatusDisplayName(context),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -177,7 +188,8 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert, size: 20),
       onSelected: (value) {
@@ -215,106 +227,106 @@ class TaskCard extends StatelessWidget {
         }
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'edit',
           child: Row(
             children: [
-              Icon(Icons.edit, size: 20),
-              SizedBox(width: 8),
-              Text('Edit'),
+              const Icon(Icons.edit, size: 20),
+              const SizedBox(width: 8),
+              Text(t.edit),
             ],
           ),
         ),
         const PopupMenuDivider(),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'status_pending',
           child: Row(
             children: [
-              Icon(Icons.schedule, size: 20, color: Color(0xFFF59E0B)),
-              SizedBox(width: 8),
-              Text('Mark as Pending'),
+              const Icon(Icons.schedule, size: 20, color: Color(0xFFF59E0B)),
+              const SizedBox(width: 8),
+              Text('${t.updateStatus}: ${t.pending}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'status_in_progress',
           child: Row(
             children: [
-              Icon(Icons.play_circle_outline, size: 20, color: Color(0xFF3B82F6)),
-              SizedBox(width: 8),
-              Text('Mark as In Progress'),
+              const Icon(Icons.play_circle_outline, size: 20, color: Color(0xFF3B82F6)),
+              const SizedBox(width: 8),
+              Text('${t.updateStatus}: ${t.inProgress}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'status_completed',
           child: Row(
             children: [
-              Icon(Icons.check_circle_outline, size: 20, color: Color(0xFF10B981)),
-              SizedBox(width: 8),
-              Text('Mark as Completed'),
+              const Icon(Icons.check_circle_outline, size: 20, color: Color(0xFF10B981)),
+              const SizedBox(width: 8),
+              Text('${t.updateStatus}: ${t.completed}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'status_cancelled',
           child: Row(
             children: [
-              Icon(Icons.cancel_outlined, size: 20, color: Color(0xFFEF4444)),
-              SizedBox(width: 8),
-              Text('Mark as Cancelled'),
+              const Icon(Icons.cancel_outlined, size: 20, color: Color(0xFFEF4444)),
+              const SizedBox(width: 8),
+              Text('${t.updateStatus}: ${t.cancelled}'),
             ],
           ),
         ),
         const PopupMenuDivider(),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'priority_low',
           child: Row(
             children: [
-              Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Set Priority: Low'),
+              const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.green),
+              const SizedBox(width: 8),
+              Text('${t.priority}: ${t.low}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'priority_medium',
           child: Row(
             children: [
-              Icon(Icons.remove, size: 20, color: Colors.orange),
-              SizedBox(width: 8),
-              Text('Set Priority: Medium'),
+              const Icon(Icons.remove, size: 20, color: Colors.orange),
+              const SizedBox(width: 8),
+              Text('${t.priority}: ${t.medium}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'priority_high',
           child: Row(
             children: [
-              Icon(Icons.keyboard_arrow_up, size: 20, color: Colors.red),
-              SizedBox(width: 8),
-              Text('Set Priority: High'),
+              const Icon(Icons.keyboard_arrow_up, size: 20, color: Colors.red),
+              const SizedBox(width: 8),
+              Text('${t.priority}: ${t.high}'),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'priority_urgent',
           child: Row(
             children: [
-              Icon(Icons.priority_high, size: 20, color: Colors.purple),
-              SizedBox(width: 8),
-              Text('Set Priority: Urgent'),
+              const Icon(Icons.priority_high, size: 20, color: Colors.purple),
+              const SizedBox(width: 8),
+              Text('${t.priority}: ${t.urgent}'),
             ],
           ),
         ),
         const PopupMenuDivider(),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
-              Icon(Icons.delete, size: 20, color: Colors.red),
-              SizedBox(width: 8),
-              Text('Delete'),
+              const Icon(Icons.delete, size: 20, color: Colors.red),
+              const SizedBox(width: 8),
+              Text(t.delete),
             ],
           ),
         ),
@@ -372,21 +384,32 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(ThemeData theme) {
-    return Row(
-      children: [
-        _buildCategoryChip(theme),
-        const Spacer(),
-        if (task.dueDate != null) _buildDueDate(theme),
-        if (task.estimatedDurationMinutes > 0) ...[
-          const SizedBox(width: 12),
-          _buildDuration(theme),
-        ],
-      ],
+  Widget _buildFooter(BuildContext context, ThemeData theme) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Row(
+          children: [
+            Flexible(
+              child: _buildCategoryChip(context, theme),
+            ),
+            const SizedBox(width: 8),
+            if (task.dueDate != null) ...[
+              Flexible(
+                child: _buildDueDate(context, theme),
+              ),
+              const SizedBox(width: 8),
+            ],
+            if (task.estimatedDurationMinutes > 0)
+              Flexible(
+                child: _buildDuration(theme),
+              ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildCategoryChip(ThemeData theme) {
+  Widget _buildCategoryChip(BuildContext context, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -395,17 +418,19 @@ class TaskCard extends StatelessWidget {
         border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
       ),
       child: Text(
-        task.categoryDisplayName,
+        task.getCategoryDisplayName(context),
         style: TextStyle(
           fontSize: 12,
           color: theme.colorScheme.onSurface.withOpacity(0.7),
           fontWeight: FontWeight.w600,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _buildDueDate(ThemeData theme) {
+  Widget _buildDueDate(BuildContext context, ThemeData theme) {
+    final t = AppLocalizations.of(context);
     final isOverdue = task.isOverdue;
     final isDueToday = task.isDueToday;
     
@@ -414,13 +439,13 @@ class TaskCard extends StatelessWidget {
     
     if (isOverdue) {
       color = const Color(0xFFEF4444);
-      text = 'Overdue';
+      text = _getOverdueText(t);
     } else if (isDueToday) {
       color = const Color(0xFFF59E0B);
-      text = 'Due Today';
+      text = _getDueTodayText(t);
     } else {
       color = const Color(0xFF64748B);
-      text = 'Due ${_formatDate(task.dueDate!)}';
+      text = '${t.dueDate}: ${_formatDate(context, task.dueDate!)}';
     }
 
     return Container(
@@ -435,12 +460,15 @@ class TaskCard extends StatelessWidget {
         children: [
           Icon(Icons.schedule, size: 14, color: color),
           const SizedBox(width: 4),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 12,
-              color: color,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 12,
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -461,12 +489,15 @@ class TaskCard extends StatelessWidget {
         children: [
           Icon(Icons.timer, size: 14, color: theme.colorScheme.primary),
           const SizedBox(width: 4),
-          Text(
-            task.formattedEstimatedDuration,
-            style: TextStyle(
-              fontSize: 12,
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w600,
+          Flexible(
+            child: Text(
+              task.formattedEstimatedDuration,
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -474,20 +505,56 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(BuildContext context, DateTime date) {
+    final t = AppLocalizations.of(context);
     final now = DateTime.now();
     final difference = date.difference(now).inDays;
     
     if (difference == 0) {
-      return 'Today';
+      return _getTodayText(t);
     } else if (difference == 1) {
-      return 'Tomorrow';
+      return _getTomorrowText(t);
     } else if (difference == -1) {
-      return 'Yesterday';
+      return _getYesterdayText(t);
     } else if (difference > 0) {
-      return 'in $difference days';
+      return _getInDaysText(t, difference);
     } else {
-      return '${-difference} days ago';
+      return _getDaysAgoText(t, -difference);
     }
+  }
+
+  String _getOverdueText(AppLocalizations t) {
+    // Fallback to English for now
+    return 'Overdue';
+  }
+
+  String _getDueTodayText(AppLocalizations t) {
+    // Fallback to English for now
+    return 'Due Today';
+  }
+
+  String _getTodayText(AppLocalizations t) {
+    // Fallback to English for now
+    return 'Today';
+  }
+
+  String _getTomorrowText(AppLocalizations t) {
+    // Fallback to English for now
+    return 'Tomorrow';
+  }
+
+  String _getYesterdayText(AppLocalizations t) {
+    // Fallback to English for now
+    return 'Yesterday';
+  }
+
+  String _getInDaysText(AppLocalizations t, int days) {
+    // Fallback to English for now
+    return 'in $days days';
+  }
+
+  String _getDaysAgoText(AppLocalizations t, int days) {
+    // Fallback to English for now
+    return '$days days ago';
   }
 }

@@ -527,29 +527,41 @@ class _TaskListScreenState extends State<TaskListScreen>
     
     if (crossAxisCount == 1) {
       // Use ListView for mobile
-      return ListView.builder(
-        padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          final task = tasks[index];
-          return _buildAnimatedTaskCard(task, index);
-        },
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: isDesktop ? 1100 : (isTablet ? 900 : 700)),
+          child: ListView.builder(
+            padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return _buildAnimatedTaskCard(task, index);
+            },
+          ),
+        ),
       );
     } else {
       // Use GridView for tablet and desktop
-      return GridView.builder(
-        padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          childAspectRatio: isDesktop ? 1.1 : 1.0,
-          crossAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
-          mainAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: isDesktop ? 1300 : 1100),
+          child: GridView.builder(
+            padding: EdgeInsets.all(isDesktop ? 24 : (isTablet ? 20 : 16)),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: isDesktop ? 1.1 : 1.0,
+              crossAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
+              mainAxisSpacing: isDesktop ? 20 : (isTablet ? 16 : 12),
+            ),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return _buildAnimatedTaskCard(task, index);
+            },
+          ),
         ),
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          final task = tasks[index];
-          return _buildAnimatedTaskCard(task, index);
-        },
       );
     }
   }
@@ -818,28 +830,30 @@ class _TaskListScreenState extends State<TaskListScreen>
   }
 
   String _getStatusDisplayName(TaskStatus status) {
+    final t = AppLocalizations.of(context);
     switch (status) {
       case TaskStatus.pending:
-        return 'Pending';
+        return t.pending;
       case TaskStatus.inProgress:
-        return 'In Progress';
+        return t.inProgress;
       case TaskStatus.completed:
-        return 'Completed';
+        return t.completed;
       case TaskStatus.cancelled:
-        return 'Cancelled';
+        return t.cancelled;
     }
   }
 
   String _getPriorityDisplayName(TaskPriority priority) {
+    final t = AppLocalizations.of(context);
     switch (priority) {
       case TaskPriority.low:
-        return 'Low';
+        return t.low;
       case TaskPriority.medium:
-        return 'Medium';
+        return t.medium;
       case TaskPriority.high:
-        return 'High';
+        return t.high;
       case TaskPriority.urgent:
-        return 'Urgent';
+        return t.urgent;
     }
   }
 

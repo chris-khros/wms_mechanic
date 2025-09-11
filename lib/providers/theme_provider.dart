@@ -50,6 +50,7 @@ class ThemeProvider with ChangeNotifier {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF667eea),
@@ -269,6 +270,7 @@ class ThemeProvider with ChangeNotifier {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       brightness: Brightness.dark,
       colorScheme: ColorScheme.fromSeed(
         seedColor: const Color(0xFF667eea),

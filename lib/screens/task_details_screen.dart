@@ -278,134 +278,132 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              _buildSliverAppBar(),
-            ];
-          },
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildTaskInfoTab(),
-              _buildTimeTrackingTab(),
-              _buildNotesPhotosTab(),
-              _buildSignOffTab(),
-            ],
-          ),
+        child: Column(
+          children: [
+            // Fixed header with task info
+            _buildFixedHeader(),
+            // Tab bar
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Theme.of(context).colorScheme.primary,
+                unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                indicatorColor: Theme.of(context).colorScheme.primary,
+                indicatorWeight: 3,
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                tabs: [
+                  Tab(text: AppLocalizations.of(context).detailsTab),
+                  Tab(text: AppLocalizations.of(context).timeTrackingTab),
+                  Tab(text: AppLocalizations.of(context).notesPhotosTab),
+                  Tab(text: AppLocalizations.of(context).signOffTab),
+                ],
+              ),
+            ),
+            // Tab content with proper clipping
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildTaskInfoTab(),
+                    _buildTimeTrackingTab(),
+                    _buildNotesPhotosTab(),
+                    _buildSignOffTab(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSliverAppBar() {
-    return SliverAppBar(
-      expandedHeight: 200.0,
-      floating: false,
-      pinned: true,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF667eea),
-                Color(0xFF764ba2),
-              ],
-            ),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildFixedHeader() {
+    return Container(
+      height: 200.0,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF667eea),
+            Color(0xFF764ba2),
+          ],
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.task_alt,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _task!.title,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _task!.description,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white.withOpacity(0.9),
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.task_alt,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      _buildStatusChip(_task!.status),
-                      const SizedBox(width: 8),
-                      _buildPriorityChip(_task!.priority),
-                      const SizedBox(width: 8),
-                      _buildCategoryChip(_task!.category),
-                    ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _task!.title,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _task!.description,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-      ),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: TabBar(
-            controller: _tabController,
-            labelColor: Theme.of(context).colorScheme.primary,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-            indicatorColor: Theme.of(context).colorScheme.primary,
-            indicatorWeight: 3,
-            labelStyle: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-            tabs: [
-              Tab(text: AppLocalizations.of(context).detailsTab),
-              Tab(text: AppLocalizations.of(context).timeTrackingTab),
-              Tab(text: AppLocalizations.of(context).notesPhotosTab),
-              Tab(text: AppLocalizations.of(context).signOffTab),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  _buildStatusChip(_task!.status),
+                  const SizedBox(width: 8),
+                  _buildPriorityChip(_task!.priority),
+                  const SizedBox(width: 8),
+                  _buildCategoryChip(_task!.category),
+                ],
+              ),
             ],
           ),
         ),
@@ -535,17 +533,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
           _buildInfoCard(AppLocalizations.of(context).taskManagement, [
             _buildInfoRow(AppLocalizations.of(context).title, _task!.title),
             _buildInfoRow(AppLocalizations.of(context).description, _task!.description),
-            _buildInfoRow(AppLocalizations.of(context).priority, _task!.priorityDisplayName),
-            _buildInfoRow(AppLocalizations.of(context).status, _task!.statusDisplayName),
-            _buildInfoRow(AppLocalizations.of(context).category, _task!.categoryDisplayName),
+            _buildInfoRow(AppLocalizations.of(context).priority, _task!.getPriorityDisplayName(context)),
+            _buildInfoRow(AppLocalizations.of(context).status, _task!.getStatusDisplayName(context)),
+            _buildInfoRow(AppLocalizations.of(context).category, _task!.getCategoryDisplayName(context)),
             if (_task!.dueDate != null)
               _buildInfoRow(AppLocalizations.of(context).dueDate, _formatDate(_task!.dueDate!)),
             if (_task!.estimatedDurationMinutes > 0)
-              _buildInfoRow('Estimated Duration', _task!.formattedEstimatedDuration),
+              _buildInfoRow(AppLocalizations.of(context).estimatedDuration, _task!.formattedEstimatedDuration),
             if (_task!.location != null)
               _buildInfoRow(AppLocalizations.of(context).location, _task!.location!),
             if (_task!.tags.isNotEmpty)
-              _buildInfoRow('Tags', _task!.tags.join(', ')),
+              _buildInfoRow(AppLocalizations.of(context).tags, _task!.tags.join(', ')),
           ]),
           const SizedBox(height: 16),
           _buildStatusUpdateCard(),
@@ -874,7 +872,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          isRunning ? 'Running' : 'Stopped',
+                          isRunning ? AppLocalizations.of(context).running : AppLocalizations.of(context).stopped,
                           style: TextStyle(
                             color: isRunning ? Colors.green : Colors.grey,
                             fontWeight: FontWeight.w600,
@@ -913,7 +911,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Current Session',
+                      AppLocalizations.of(context).currentSession,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -939,7 +937,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                         Row(
                           children: [
                             Text(
-                              'Total Time',
+                              AppLocalizations.of(context).totalTime,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],
@@ -982,7 +980,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Entries',
+                          AppLocalizations.of(context).entries,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -1009,7 +1007,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     child: ElevatedButton.icon(
                       onPressed: isRunning ? _pauseTimer : _startTimer,
                       icon: Icon(isRunning ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                      label: Text(isRunning ? 'Pause' : 'Start'),
+                      label: Text(isRunning ? AppLocalizations.of(context).pause : AppLocalizations.of(context).start),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isRunning ? Colors.orange : Colors.green,
                         foregroundColor: Colors.white,
@@ -1026,7 +1024,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     child: ElevatedButton.icon(
                       onPressed: _stopTimer,
                       icon: const Icon(Icons.stop_rounded),
-                      label: const Text('Stop'),
+                      label: Text(AppLocalizations.of(context).stop),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
@@ -1046,7 +1044,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                 child: OutlinedButton.icon(
                   onPressed: _showAddTimeEntryDialog,
                   icon: const Icon(Icons.add_rounded),
-                  label: const Text('Add Manual Entry'),
+                  label: Text(AppLocalizations.of(context).addManualEntry),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFF667eea),
                     side: const BorderSide(color: Color(0xFF667eea)),
@@ -1087,7 +1085,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                   TextButton.icon(
                     onPressed: _showTimeAnalytics,
                     icon: const Icon(Icons.analytics_rounded, size: 16),
-                    label: const Text('Analytics'),
+                    label: Text('Analytics'),
                     style: TextButton.styleFrom(
                       foregroundColor: const Color(0xFF667eea),
                     ),
@@ -1111,7 +1109,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'No time entries yet',
+                      AppLocalizations.of(context).noTimeEntriesYet,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -1120,7 +1118,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Start tracking time or add manual entries',
+                      AppLocalizations.of(context).startTrackingOrAddManual,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[500],
@@ -1282,12 +1280,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     IconButton(
                       onPressed: _showPhotoOptionsDialog,
                       icon: const Icon(Icons.camera_alt),
-                      tooltip: 'Take Photo',
+                      tooltip: AppLocalizations.of(context).capturePhoto,
                     ),
                     IconButton(
                       onPressed: _showPhotoOptionsDialog,
                       icon: const Icon(Icons.photo_library),
-                      tooltip: 'Choose from Gallery',
+                      tooltip: AppLocalizations.of(context).chooseFromGallery,
                     ),
                   ],
                 ),
@@ -1321,7 +1319,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Tap camera or gallery to add photos',
+                        AppLocalizations.of(context).tapConfirmPhotosToSave,
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 12,
@@ -1335,7 +1333,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
               // Confirmed photos
               if (_capturedPhotos.isNotEmpty) ...[
                 Text(
-                  'Confirmed Photos',
+                  AppLocalizations.of(context).confirmedPhotos,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -1363,7 +1361,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                 Row(
                   children: [
                     Text(
-                      'Pending Photos',
+                      AppLocalizations.of(context).pendingPhotos,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -1410,7 +1408,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                   child: ElevatedButton.icon(
                     onPressed: _confirmPendingPhotos,
                     icon: const Icon(Icons.check),
-                    label: Text('Confirm ${_pendingPhotos.length} Photos'),
+                    label: Text('${AppLocalizations.of(context).confirmPhotos} ${_pendingPhotos.length}'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
@@ -1486,10 +1484,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
               title: Text(AppLocalizations.of(context).markAsCompleted),
               subtitle: Text(
                 isCompleted 
-                  ? 'Task has been completed successfully'
+                  ? _getTaskCompletedSuccessfullyText()
                   : canComplete 
-                    ? 'Ready to mark as completed'
-                    : 'Complete quality check and signature first'
+                    ? _getReadyToMarkCompletedText()
+                    : _getCompleteQualityCheckAndSignatureFirstText()
               ),
             ),
             if (!isCompleted && !canComplete) ...[
@@ -1507,7 +1505,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Complete quality check and customer signature to enable task completion',
+                        _getCompleteQualityCheckAndCustomerSignatureText(),
                         style: TextStyle(
                           color: Colors.orange[700],
                           fontSize: 14,
@@ -1545,9 +1543,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                   size: 24,
                 ),
                 const SizedBox(width: 12),
-                const Text(
-                  'Quality Check',
-                  style: TextStyle(
+                Text(
+                  AppLocalizations.of(context).qualityCheck,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1561,9 +1559,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.green.withOpacity(0.3)),
                     ),
-                    child: const Text(
-                      'VERIFIED',
-                      style: TextStyle(
+                    child: Text(
+                      _getVerifiedText(),
+                      style: const TextStyle(
                         color: Colors.green,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -1587,7 +1585,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Progress: $completedItems of $totalItems items',
+                        '${_getProgressText()}: $completedItems of $totalItems ${_getItemsText()}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -1627,11 +1625,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                 _qualityCheckNotes = value;
                 _autoSaveTask();
               },
-              decoration: const InputDecoration(
-                labelText: 'Quality Check Notes (Optional)',
-                hintText: 'Add any additional notes or observations...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.note_add),
+              decoration: InputDecoration(
+                labelText: _getQualityCheckNotesOptionalText(),
+                hintText: _getAddAdditionalNotesText(),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.note_add),
               ),
               maxLines: 3,
             ),
@@ -1646,8 +1644,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                   onPressed: completedItems == totalItems ? _completeQualityCheck : null,
                   icon: const Icon(Icons.verified),
                   label: Text(completedItems == totalItems 
-                    ? 'Complete Quality Check' 
-                    : 'Complete All Items First ($completedItems/$totalItems)'),
+                    ? AppLocalizations.of(context).completeQualityCheck
+                    : _getCompleteAllItemsFirstText(completedItems, totalItems)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: completedItems == totalItems ? Colors.green : Colors.grey,
                     foregroundColor: Colors.white,
@@ -1662,7 +1660,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     child: OutlinedButton.icon(
                       onPressed: _resetQualityCheck,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Reset'),
+                      label: Text(_getResetText()),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
@@ -1673,7 +1671,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                     child: OutlinedButton.icon(
                       onPressed: _showQualityCheckDetails,
                       icon: const Icon(Icons.info),
-                      label: const Text('Details'),
+                      label: Text(_getDetailsText()),
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
@@ -1758,28 +1756,28 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
     switch (key) {
       case 'work_completed':
         return {
-          'title': 'Work Completed',
-          'description': 'All assigned work has been completed according to specifications'
+          'title': _getWorkCompletedText(),
+          'description': _getWorkCompletedDescriptionText()
         };
       case 'safety_standards':
         return {
-          'title': 'Safety Standards Met',
-          'description': 'All safety protocols and standards have been followed'
+          'title': _getSafetyStandardsMetText(),
+          'description': _getSafetyStandardsDescriptionText()
         };
       case 'equipment_tested':
         return {
-          'title': 'Equipment Tested',
-          'description': 'All equipment has been tested and is functioning properly'
+          'title': _getEquipmentTestedText(),
+          'description': _getEquipmentTestedDescriptionText()
         };
       case 'documentation_complete':
         return {
-          'title': 'Documentation Complete',
-          'description': 'All required documentation has been completed and filed'
+          'title': _getDocumentationCompleteText(),
+          'description': _getDocumentationCompleteDescriptionText()
         };
       case 'customer_satisfied':
         return {
-          'title': 'Customer Satisfied',
-          'description': 'Customer has confirmed satisfaction with the work performed'
+          'title': _getCustomerSatisfiedText(),
+          'description': _getCustomerSatisfiedDescriptionText()
         };
       case 'cleanup_done':
         return {
@@ -3141,9 +3139,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Completed Items:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              Text(
+                _getCompletedItemsText(),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 8),
               ..._qualityCheckItems.entries
@@ -3304,5 +3302,121 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
         ),
       ),
     );
+  }
+
+  // Helper methods for localized text (fallback implementation)
+  String _getTaskCompletedSuccessfullyText() {
+    // Fallback to English for now
+    return 'Task has been completed successfully';
+  }
+
+  String _getReadyToMarkCompletedText() {
+    // Fallback to English for now
+    return 'Ready to mark as completed';
+  }
+
+  String _getCompleteQualityCheckAndSignatureFirstText() {
+    // Fallback to English for now
+    return 'Complete quality check and signature first';
+  }
+
+  String _getCompleteQualityCheckAndCustomerSignatureText() {
+    // Fallback to English for now
+    return 'Complete quality check and customer signature to enable task completion';
+  }
+
+  String _getVerifiedText() {
+    // Fallback to English for now
+    return 'VERIFIED';
+  }
+
+  String _getProgressText() {
+    // Fallback to English for now
+    return 'Progress';
+  }
+
+  String _getItemsText() {
+    // Fallback to English for now
+    return 'items';
+  }
+
+  String _getQualityCheckNotesOptionalText() {
+    // Fallback to English for now
+    return 'Quality Check Notes (Optional)';
+  }
+
+  String _getAddAdditionalNotesText() {
+    // Fallback to English for now
+    return 'Add any additional notes or observations...';
+  }
+
+  String _getCompleteAllItemsFirstText(int completed, int total) {
+    // Fallback to English for now
+    return 'Complete All Items First ($completed/$total)';
+  }
+
+  String _getResetText() {
+    // Fallback to English for now
+    return 'Reset';
+  }
+
+  String _getDetailsText() {
+    // Fallback to English for now
+    return 'Details';
+  }
+
+  String _getCompletedItemsText() {
+    // Fallback to English for now
+    return 'Completed Items:';
+  }
+
+  String _getWorkCompletedText() {
+    // Fallback to English for now
+    return 'Work Completed';
+  }
+
+  String _getWorkCompletedDescriptionText() {
+    // Fallback to English for now
+    return 'All assigned work has been completed according to specifications';
+  }
+
+  String _getSafetyStandardsMetText() {
+    // Fallback to English for now
+    return 'Safety Standards Met';
+  }
+
+  String _getSafetyStandardsDescriptionText() {
+    // Fallback to English for now
+    return 'All safety protocols and standards have been followed';
+  }
+
+  String _getEquipmentTestedText() {
+    // Fallback to English for now
+    return 'Equipment Tested';
+  }
+
+  String _getEquipmentTestedDescriptionText() {
+    // Fallback to English for now
+    return 'All equipment has been tested and is functioning properly';
+  }
+
+  String _getDocumentationCompleteText() {
+    // Fallback to English for now
+    return 'Documentation Complete';
+  }
+
+  String _getDocumentationCompleteDescriptionText() {
+    // Fallback to English for now
+    return 'All required documentation has been completed and filed';
+  }
+
+  String _getCustomerSatisfiedText() {
+    // Fallback to English for now
+    return 'Customer Satisfied';
+  }
+
+  String _getCustomerSatisfiedDescriptionText() {
+    // Fallback to English for now
+    return 'Customer has confirmed satisfaction with the completed work';
   }
 }
