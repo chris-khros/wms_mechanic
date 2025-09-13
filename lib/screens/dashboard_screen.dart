@@ -107,7 +107,7 @@ class DashboardScreenState extends State<DashboardScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).welcome + ',',
+                                  '${AppLocalizations.of(context).welcome},',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white.withOpacity(0.9),

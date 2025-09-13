@@ -1085,7 +1085,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen>
                   TextButton.icon(
                     onPressed: _showTimeAnalytics,
                     icon: const Icon(Icons.analytics_rounded, size: 16),
-                    label: Text('Analytics'),
+                    label: const Text('Analytics'),
                     style: TextButton.styleFrom(
                       foregroundColor: const Color(0xFF667eea),
                     ),

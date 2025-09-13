@@ -57,7 +57,7 @@ class _PreferencesWidgetState extends State<PreferencesWidget> {
                   const SizedBox(width: 12),
                   Text(
                     AppLocalizations.of(context).preferencesTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

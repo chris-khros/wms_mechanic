@@ -651,11 +651,11 @@ class _SignaturePadWidgetState extends State<SignaturePadWidget> {
                 // Header
                 Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF8360c3),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: const Radius.circular(20),
-                      topRight: const Radius.circular(20),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF8360c3),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
                   ),
                   child: Row(

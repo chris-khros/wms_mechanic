@@ -85,7 +85,7 @@ class ThemeProvider with ChangeNotifier {
           color: Color(0xFF1E293B),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 0,
         shadowColor: Colors.black.withOpacity(0.08),
@@ -240,7 +240,7 @@ class ThemeProvider with ChangeNotifier {
         behavior: SnackBarBehavior.floating,
         elevation: 4,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: Colors.white,
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -305,7 +305,7 @@ class ThemeProvider with ChangeNotifier {
           color: Colors.white,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: const Color(0xFF1E293B),
         elevation: 0,
         shadowColor: Colors.black.withOpacity(0.2),
@@ -460,7 +460,7 @@ class ThemeProvider with ChangeNotifier {
         behavior: SnackBarBehavior.floating,
         elevation: 4,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF1E293B),
         elevation: 8,
         shape: RoundedRectangleBorder(
